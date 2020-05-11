@@ -1,0 +1,30 @@
+package pl.com.bottega.cymes.cinemas.dataaccess.model;
+
+import lombok.Data;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import java.util.List;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.GenerationType.IDENTITY;
+
+@Data
+@Entity
+public class Row {
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+
+    private Integer number;
+
+    @OneToMany(cascade = ALL)
+    @JoinColumn
+    private List<RowElement> elements;
+}
