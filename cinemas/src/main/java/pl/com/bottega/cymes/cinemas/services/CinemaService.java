@@ -10,12 +10,14 @@ import pl.com.bottega.cymes.cinemas.services.commands.SuspendCommand;
 import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
+import pl.com.bottega.cymes.cinemas.services.interceptors.Audit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
 
+@Audit
 @Stateless
 public class CinemaService {
 

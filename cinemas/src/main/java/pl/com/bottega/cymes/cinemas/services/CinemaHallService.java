@@ -14,6 +14,7 @@ import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaHallInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.RowDto;
 import pl.com.bottega.cymes.cinemas.services.dto.RowElementDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
+import pl.com.bottega.cymes.cinemas.services.interceptors.Audit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+@Audit
 @Stateless
 public class CinemaHallService {
 
