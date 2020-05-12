@@ -19,7 +19,6 @@ import pl.com.bottega.cymes.cinemas.services.interceptors.ValidateCommand;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
 import java.time.Instant;
 import java.util.List;
 
