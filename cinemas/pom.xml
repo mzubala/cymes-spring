@@ -72,5 +72,11 @@
             <version>2.11.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+            <version>2.0.1.Final</version>
+        </dependency>
     </dependencies>
 </project>
