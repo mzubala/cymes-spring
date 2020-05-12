@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Audit
@@ -29,12 +30,13 @@ public class AuditInterceptor {
     @AroundInvoke
     public Object saveCommand(InvocationContext ctx) throws Exception {
         var userId = userProvider.currentUserId();
-        Stream<UserCommand> commands = Stream.of(ctx.getParameters())
+        var commands = Stream.of(ctx.getParameters())
             .filter((param) -> param instanceof UserCommand)
             .map((param) -> (UserCommand) param)
-            .map((cmd) -> cmd.withUserId(userId));
+            .map((cmd) -> cmd.withUserId(userId))
+            .collect(Collectors.toSet());
         var result = ctx.proceed();
-        commands.map(this::toPersistenetCommand).forEach(persistentCommandDao::save);
+        commands.stream().map(this::toPersistenetCommand).forEach(persistentCommandDao::save);
         return result;
     }
 
