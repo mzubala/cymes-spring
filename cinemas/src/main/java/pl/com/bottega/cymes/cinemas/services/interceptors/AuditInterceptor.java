@@ -7,14 +7,17 @@ import pl.com.bottega.cymes.cinemas.dataaccess.model.PersistentCommand;
 import pl.com.bottega.cymes.cinemas.resources.security.UserProvider;
 import pl.com.bottega.cymes.cinemas.services.commands.UserCommand;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Audit
 @Interceptor
+@Priority(Interceptor.Priority.APPLICATION + 5)
 public class AuditInterceptor {
 
     @Inject
@@ -29,12 +32,13 @@ public class AuditInterceptor {
     @AroundInvoke
     public Object saveCommand(InvocationContext ctx) throws Exception {
         var userId = userProvider.currentUserId();
-        Stream<UserCommand> commands = Stream.of(ctx.getParameters())
+        var commands = Stream.of(ctx.getParameters())
             .filter((param) -> param instanceof UserCommand)
             .map((param) -> (UserCommand) param)
-            .map((cmd) -> cmd.withUserId(userId));
+            .map((cmd) -> cmd.withUserId(userId))
+            .collect(Collectors.toSet());
         var result = ctx.proceed();
-        commands.map(this::toPersistenetCommand).forEach(persistentCommandDao::save);
+        commands.stream().map(this::toPersistenetCommand).forEach(persistentCommandDao::save);
         return result;
     }
 

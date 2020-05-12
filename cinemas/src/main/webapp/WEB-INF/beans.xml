@@ -6,5 +6,6 @@
        bean-discovery-mode="all">
     <interceptors>
         <class>pl.com.bottega.cymes.cinemas.services.interceptors.AuditInterceptor</class>
+        <class>pl.com.bottega.cymes.cinemas.services.interceptors.ValidationInterceptor</class>
     </interceptors>
 </beans>
