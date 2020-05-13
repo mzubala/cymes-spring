@@ -9,7 +9,7 @@ POST http://localhost:8080/cinemas/rest/cinemas
 Content-Type: application/json
 
 {
-  "name": null,
+  "name": "Arkadia",
   "city": "Warszawa"
 }
 

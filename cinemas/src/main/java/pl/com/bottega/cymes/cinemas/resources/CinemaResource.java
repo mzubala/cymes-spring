@@ -1,5 +1,7 @@
 package pl.com.bottega.cymes.cinemas.resources;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import pl.com.bottega.cymes.cinemas.resources.request.CreateCinemaRequest;
 import pl.com.bottega.cymes.cinemas.resources.request.SuspendRequest;
 import pl.com.bottega.cymes.cinemas.services.CinemaService;
@@ -20,6 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 import java.util.Date;
 import java.util.List;
 
@@ -32,11 +35,19 @@ public class CinemaResource {
     private CinemaService cinemaService;
 
     @POST
-    public void create(CreateCinemaRequest createCinemaRequest) {
+    public Response create(CreateCinemaRequest createCinemaRequest) {
         var cmd = new CreateCinemaCommand();
         cmd.setName(createCinemaRequest.getName());
         cmd.setCity(createCinemaRequest.getCity());
-        cinemaService.create(cmd);
+        try {
+            cinemaService.create(cmd);
+        } catch(Exception ex) {
+            if(ExceptionUtils.indexOfType(ex, ConstraintViolationException.class) > -1) {
+                return Response.status(409).entity(new ExceptionMappers.Error("Duplicate cinema")).build();
+            }
+            throw ex;
+        }
+        return Response.ok().build();
     }
 
     @GET
