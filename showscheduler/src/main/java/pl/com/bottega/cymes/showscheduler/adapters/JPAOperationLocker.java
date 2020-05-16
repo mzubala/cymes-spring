@@ -25,7 +25,7 @@ public class JPAOperationLocker implements OperationLocker {
     private Logger logger = Logger.getLogger(JPAOperationLocker.class);
 
     @Resource
-    private UserTransaction userTransaction;git s
+    private UserTransaction userTransaction;
 
     @Override
     public <T> T lock(String lockKey1, String lockKey2, Supplier<T> operation) {
