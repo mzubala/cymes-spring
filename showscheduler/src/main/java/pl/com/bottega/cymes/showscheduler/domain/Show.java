@@ -22,6 +22,15 @@ public class Show {
         this.end = start.plus(movie.getDurationMinutes(), MINUTES).plus(configuration.showReservationBuffer());
     }
 
+    public Show(UUID id, Long movieId, Long cinemaId, Long cinemaHallId, Instant start, Instant end) {
+        this.id = id;
+        this.movieId = movieId;
+        this.cinemaId = cinemaId;
+        this.cinemaHallId = cinemaHallId;
+        this.start = start;
+        this.end = end;
+    }
+
     public UUID getId() {
         return id;
     }
