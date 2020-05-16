@@ -22,36 +22,21 @@ public class JPAShowRepository implements ShowRepository {
     @Override
     @Transactional
     public void save(Show show) {
-        entityManager.merge(new ShowEntity(show));
+
     }
 
     @Override
     public boolean anyShowsCollidingWith(Show show) {
-        return entityManager.createNamedQuery(ShowEntity.COUNT_COLLIDING_SHOWS, Long.class)
-            .setParameter("ns", show.getStart())
-            .setParameter("ne", show.getEnd())
-            .getSingleResult() > 0;
+        return false;
     }
 
     @Override
     public Show get(UUID showId) {
-        var entity = entityManager.find(ShowEntity.class, showId);
-        if(entity == null) {
-            throw new ShowNotFoundException();
-        }
-        return entity.toShow();
+        return null;
     }
 
     @Entity(name = "Show")
     @Table(name = "shows")
-    @NamedQuery(
-        name = ShowEntity.COUNT_COLLIDING_SHOWS,
-        query = "SELECT count(s) FROM Show s WHERE " +
-            "(:ns <= s.start AND :ne >= s.start AND :ne <= s.end) OR " +
-            "(:ns <= s.start AND :ne >= s.end)  OR" +
-            "(:ns >= s.start AND :ne <= s.end) OR " +
-            "(:ns >= s.start AND :ns <= s.end AND :ne >= s.end)"
-    )
     @NoArgsConstructor
     public static class ShowEntity {
 
