@@ -8,4 +8,6 @@ public interface ShowRepository {
     boolean anyShowsCollidingWith(Show show);
 
     Show get(UUID showId);
+
+    class ShowNotFoundException extends RuntimeException {}
 }
