@@ -14,6 +14,8 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.UUID;
 
+import static javax.transaction.Transactional.TxType.SUPPORTS;
+
 public class JPAShowRepository implements ShowRepository {
 
     @PersistenceContext
@@ -26,6 +28,7 @@ public class JPAShowRepository implements ShowRepository {
     }
 
     @Override
+    @Transactional(SUPPORTS)
     public boolean anyShowsCollidingWith(Show show) {
         return entityManager.createNamedQuery(ShowEntity.COUNT_COLLIDING_SHOWS, Long.class)
             .setParameter("ns", show.getStart())

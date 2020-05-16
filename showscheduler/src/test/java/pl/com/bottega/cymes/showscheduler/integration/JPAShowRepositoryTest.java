@@ -3,21 +3,16 @@ package pl.com.bottega.cymes.showscheduler.integration;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import pl.com.bottega.cymes.showscheduler.Resources;
 import pl.com.bottega.cymes.showscheduler.adapters.JPAShowRepository;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ShowExample;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.time.Instant;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.jboss.shrinkwrap.resolver.api.maven.Maven.resolver;
 
 @RunWith(Arquillian.class)
 public class JPAShowRepositoryTest {
@@ -26,14 +21,7 @@ public class JPAShowRepositoryTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-        return ShrinkWrap
-            .create(WebArchive.class, "test.war")
-            .addPackages(true, Resources.class.getPackage())
-            .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
-            .addAsWebInfResource("show-scheduler-ds.xml")
-            .addAsWebInfResource("beans.xml")
-            .addAsLibraries(resolver().loadPomFromFile("pom.xml").resolve("org.assertj:assertj-core", "commons-lang:commons-lang")
-                .withTransitivity().as(File.class));
+        return DeploymentFactory.createTestArchive();
     }
 
     @Test
