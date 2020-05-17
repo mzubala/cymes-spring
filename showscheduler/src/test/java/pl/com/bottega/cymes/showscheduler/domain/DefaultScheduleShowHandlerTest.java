@@ -52,7 +52,7 @@ public class DefaultScheduleShowHandlerTest {
         handler.handle(cmd);
 
         // then
-        verify(showRepository).save(argThat((Show show) -> show.getId().equals(cmd.getShowId())));
+        verify(showRepository).save(showArg());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class DefaultScheduleShowHandlerTest {
         handler.handle(cmd);
 
         // then
-        verify(suspensionChecker, only()).isSuspended(cmd.getCinemaId(), cmd.getCinemaHallId());
+        verify(suspensionChecker, only()).anySuspensionsAtTimeOf(showArg());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class DefaultScheduleShowHandlerTest {
     @Test
     public void throwsExceptionWhenCinemaOrCinemaHallAreSuspended() {
         // given
-        when(suspensionChecker.isSuspended(cmd.getCinemaId(), cmd.getCinemaHallId())).thenReturn(true);
+        when(suspensionChecker.anySuspensionsAtTimeOf(showArg())).thenReturn(true);
 
         // then
         assertThatThrownBy(() -> handler.handle(cmd)).isInstanceOf(CinemaHallNotAvailableException.class);
@@ -91,5 +91,9 @@ public class DefaultScheduleShowHandlerTest {
         // then
         assertThatThrownBy(() -> handler.handle(cmd)).isInstanceOf(CinemaHallNotAvailableException.class);
         operationLocker.assertThatErrorOccuredDuringLockedOperation();
+    }
+
+    private Show showArg() {
+        return argThat((Show show) -> show.getId().equals(cmd.getShowId()));
     }
 }
