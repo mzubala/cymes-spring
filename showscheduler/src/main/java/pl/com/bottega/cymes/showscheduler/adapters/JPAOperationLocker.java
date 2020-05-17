@@ -10,6 +10,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
@@ -28,7 +29,28 @@ public class JPAOperationLocker implements OperationLocker {
 
     @Override
     public <T> T lock(String lockKey1, String lockKey2, Supplier<T> operation) {
-        return null;
+        var id = new OperationLockId(lockKey1, lockKey2);
+        ensureOperationLockExists(id);
+        entityManager.clear();
+        return executeInTx(() -> {
+            var acquiredLock = entityManager.find(OperationLock.class, id, LockModeType.PESSIMISTIC_WRITE);
+            if(acquiredLock == null) {
+                throw new FailedToAcquireLockException();
+            }
+            return operation.get();
+        });
+    }
+
+    private void ensureOperationLockExists(OperationLockId id) {
+        try {
+            executeInTx(() -> {
+                OperationLock lock = new OperationLock(id);
+                entityManager.persist(lock);
+                return null;
+            });
+        } catch (Exception ex) {
+            logger.warn(ex);
+        }
     }
 
     private <T> T executeInTx(Supplier<T> supplier) {
@@ -62,4 +84,6 @@ public class JPAOperationLocker implements OperationLocker {
         private String lockKey1;
         private String lockKey2;
     }
+
+    public static class FailedToAcquireLockException extends RuntimeException { }
 }
