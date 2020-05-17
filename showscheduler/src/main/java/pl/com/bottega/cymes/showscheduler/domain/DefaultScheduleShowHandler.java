@@ -25,7 +25,7 @@ class DefaultScheduleShowHandler implements ScheduleShowHandler {
     public void handle(ScheduleShowCommand command) {
         var movie = movieCatalog.get(command.getMovieId());
         var show = new Show(command, movie, configuration);
-        if(suspensionChecker.isSuspended(command.getCinemaId(), command.getCinemaHallId())) {
+        if(suspensionChecker.anySuspensionsAtTimeOf(show)) {
             throw new CinemaHallNotAvailableException();
         }
         operationLocker.lock(command.getCinemaId().toString(), command.getCinemaHallId().toString(), () -> {
