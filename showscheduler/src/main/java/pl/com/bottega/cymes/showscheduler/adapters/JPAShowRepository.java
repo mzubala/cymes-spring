@@ -7,7 +7,6 @@ import pl.com.bottega.cymes.showscheduler.domain.ShowRepository;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.transaction.Transactional;
