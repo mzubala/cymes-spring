@@ -21,7 +21,8 @@ public class DeploymentFactory {
             .addAsLibraries(resolver().loadPomFromFile("pom.xml").resolve(
                 "org.assertj:assertj-core",
                 "commons-lang:commons-lang",
-                "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+                "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
+                "com.github.tomakehurst:wiremock-jre8-standalone"
             ).withTransitivity().as(File.class));
     }
 }

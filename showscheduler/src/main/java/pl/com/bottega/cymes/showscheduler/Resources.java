@@ -20,5 +20,4 @@ public class Resources {
         mapper.registerModule(new JavaTimeModule());
         return mapper;
     }
-
 }

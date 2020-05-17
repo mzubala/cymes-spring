@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import pl.com.bottega.cymes.showscheduler.domain.ShowSchedulerConfiguration;
 
 import javax.inject.Inject;
-
 import java.time.Duration;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
