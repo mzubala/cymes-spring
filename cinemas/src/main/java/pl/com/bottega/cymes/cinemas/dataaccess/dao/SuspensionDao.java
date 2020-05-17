@@ -12,11 +12,12 @@ public class SuspensionDao extends GenericDao<Suspension, Long> {
             .setParameter("cinemaId", cinemaId).getResultList();
     }
 
-    public Boolean isCinemaSuspended(Long cinemaId, Instant at) {
+    public Boolean isCinemaSuspended(Long cinemaId, Instant from, Instant until) {
         return entityManager
             .createNamedQuery("Suspension.getActiveCinemaSuspensionAt")
             .setParameter("cinemaId", cinemaId)
-            .setParameter("at", at)
+            .setParameter("from", from)
+            .setParameter("until", until)
             .setMaxResults(1)
             .getResultList().size() > 0;
     }

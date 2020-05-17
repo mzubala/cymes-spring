@@ -73,7 +73,7 @@ public class CinemaHallResource {
 
     @GET
     @Path("/{hallId}/suspensions/check")
-    public SuspensionCheckDto suspensionCheck(@PathParam("hallId") Long hallId, @QueryParam("at") Date at) {
-        return new SuspensionCheckDto(cinemaHallService.isSuspended(hallId, at.toInstant()));
+    public SuspensionCheckDto suspensionCheck(@PathParam("hallId") Long hallId, @QueryParam("from") Date from, @QueryParam("until") Date until) {
+        return new SuspensionCheckDto(cinemaHallService.isSuspended(hallId, from.toInstant(), until.toInstant()));
     }
 }

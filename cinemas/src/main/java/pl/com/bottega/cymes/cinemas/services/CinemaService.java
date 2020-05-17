@@ -61,8 +61,8 @@ public class CinemaService {
     public DetailedCinemaInfoDto getDetailedCinemaInfo(Long cinemaId, Instant at) {
         var info = cinemaDao.getDetailedCinemaInfo(cinemaId);
         if(at != null) {
-            info.setSuspended(isSuspended(cinemaId, at));
-            info.getHalls().forEach((hall) -> hall.setSuspended(cinemaHallService.isSuspended(hall.getId(), at)));
+            info.setSuspended(isSuspended(cinemaId, at, at));
+            info.getHalls().forEach((hall) -> hall.setSuspended(cinemaHallService.isSuspended(hall.getId(), at, at)));
         }
         return info;
     }
@@ -71,7 +71,7 @@ public class CinemaService {
         return suspensionDao.getActiveCinemaSuspensions(cinemaId);
     }
 
-    public Boolean isSuspended(Long cinemaId, Instant at) {
-        return suspensionDao.isCinemaSuspended(cinemaId, at);
+    public Boolean isSuspended(Long cinemaId, Instant from, Instant until) {
+        return suspensionDao.isCinemaSuspended(cinemaId, from, until);
     }
 }

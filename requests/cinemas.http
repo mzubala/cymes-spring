@@ -20,12 +20,12 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/cinemas/1/suspensions/check?at=05/01/2020
+GET http://localhost:8080/cinemas/rest/cinemas/1/suspensions/check?from=10/01/2020 10:00&until=11/01/2020 12:00
 Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/halls/2/suspensions/check?at=05/01/2020
+GET http://localhost:8080/cinemas/rest/halls/2/suspensions/check?from=05/01/2020&until=05/02/2020
 Content-Type: application/json
 
 ###
@@ -44,8 +44,8 @@ POST http://localhost:8080/cinemas/rest/cinemas/1/suspensions
 Content-Type: application/json
 
 {
-  "from": "01/01/2020 10:00",
-  "until": "01/10/2020 12:00"
+  "from": "01/10/2020 10:00",
+  "until": "01/11/2020 12:00"
 }
 
 ###

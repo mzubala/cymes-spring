@@ -11,6 +11,6 @@ public class Movie {
     private String title;
     private Star director;
     private List<Star> actors;
-    private Set<Genre> generes;
+    private Set<Genre> genres;
     private Integer durationMinutes;
 }

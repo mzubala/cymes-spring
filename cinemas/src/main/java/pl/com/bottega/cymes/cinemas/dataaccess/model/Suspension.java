@@ -22,7 +22,12 @@ import static javax.persistence.GenerationType.SEQUENCE;
     ),
     @NamedQuery(
         name = "Suspension.getActiveCinemaSuspensionAt",
-        query = "SELECT s FROM Suspension s WHERE s.cinema.id = :cinemaId AND s.active = true AND :at >= s.from AND :at <= s.until"
+        query = "SELECT s FROM Suspension s WHERE s.cinema.id = :cinemaId AND s.active = true AND (" +
+            "(:from <= s.from AND :until >= s.from AND :until <= s.until) OR " +
+            "(:from <= s.from AND :until >= s.until)  OR" +
+            "(:from >= s.from AND :until <= s.until) OR " +
+            "(:from >= s.from AND :from <= s.until AND :until >= s.until)" +
+            ")"
     ),
     @NamedQuery(
         name = "Suspension.getActiveCinemaHallSuspensions",

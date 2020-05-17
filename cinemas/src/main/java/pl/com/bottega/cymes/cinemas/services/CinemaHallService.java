@@ -107,7 +107,7 @@ public class CinemaHallService {
         return element;
     }
 
-    public boolean isSuspended(Long hallId, Instant at) {
+    public boolean isSuspended(Long hallId, Instant from, Instant until) {
         return false;
     }
 
