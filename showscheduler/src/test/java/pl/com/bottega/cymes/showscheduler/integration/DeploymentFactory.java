@@ -14,10 +14,14 @@ public class DeploymentFactory {
         return ShrinkWrap
             .create(WebArchive.class, "test.war")
             .addPackages(true, Resources.class.getPackage())
+            .addAsResource("application.yml")
             .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
             .addAsWebInfResource("show-scheduler-ds.xml")
             .addAsWebInfResource("beans.xml")
-            .addAsLibraries(resolver().loadPomFromFile("pom.xml").resolve("org.assertj:assertj-core", "commons-lang:commons-lang")
-                .withTransitivity().as(File.class));
+            .addAsLibraries(resolver().loadPomFromFile("pom.xml").resolve(
+                "org.assertj:assertj-core",
+                "commons-lang:commons-lang",
+                "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+            ).withTransitivity().as(File.class));
     }
 }
