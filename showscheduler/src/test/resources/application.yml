@@ -1,2 +1,3 @@
 reservationBuffer: PT45M
 cinemasUrl: http://localhost:8888
+moviesUrl: http://localhost:8888

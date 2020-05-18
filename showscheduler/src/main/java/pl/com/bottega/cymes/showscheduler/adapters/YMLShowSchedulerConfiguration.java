@@ -32,9 +32,14 @@ public class YMLShowSchedulerConfiguration implements ShowSchedulerConfiguration
         return props.cinemasUrl;
     }
 
+    public String moviesUrl() {
+        return props.moviesUrl;
+    }
+
     @Data
     public static class ShowSchedulerProps {
         private Duration reservationBuffer;
         private String cinemasUrl;
+        private String moviesUrl;
     }
 }
