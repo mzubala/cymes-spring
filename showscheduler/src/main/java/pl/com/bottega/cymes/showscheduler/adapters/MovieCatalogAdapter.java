@@ -1,5 +1,7 @@
 package pl.com.bottega.cymes.showscheduler.adapters;
 
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import pl.com.bottega.cymes.showscheduler.domain.Movie;
 import pl.com.bottega.cymes.showscheduler.domain.MovieCatalog;
@@ -21,7 +23,22 @@ public class MovieCatalogAdapter implements MovieCatalog {
 
     @Override
     public Movie get(Long movieId) {
-        var json = moviesClient.getMovie(movieId);
-        return new Movie(json.getId(), json.getDurationMinutes());
+        return new GetMovieCommand(movieId).execute();
+    }
+
+    class GetMovieCommand extends HystrixCommand<Movie> {
+
+        private final Long movieId;
+
+        protected GetMovieCommand(Long movieId) {
+            super(HystrixCommandGroupKey.Factory.asKey("MoviesGroup"));
+            this.movieId = movieId;
+        }
+
+        @Override
+        protected Movie run() throws Exception {
+            var json = moviesClient.getMovie(movieId);
+            return new Movie(json.getId(), json.getDurationMinutes());
+        }
     }
 }

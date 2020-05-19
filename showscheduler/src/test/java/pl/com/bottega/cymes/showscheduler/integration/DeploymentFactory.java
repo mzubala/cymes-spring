@@ -22,7 +22,8 @@ public class DeploymentFactory {
                 "org.assertj:assertj-core",
                 "commons-lang:commons-lang",
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
-                "com.github.tomakehurst:wiremock-jre8-standalone"
+                "com.github.tomakehurst:wiremock-jre8-standalone",
+                "com.netflix.hystrix:hystrix-core"
             ).withTransitivity().as(File.class));
     }
 }

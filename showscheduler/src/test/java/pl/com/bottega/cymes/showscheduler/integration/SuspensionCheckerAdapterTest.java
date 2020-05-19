@@ -89,7 +89,7 @@ public class SuspensionCheckerAdapterTest {
         cinemaHallSuspensionCheckReturns(show, true);
 
         // then
-        assertThatThrownBy(() -> suspensionCheckerAdapter.anySuspensionsAtTimeOf(show)).isInstanceOf(ServerErrorException.class);
+        assertThatThrownBy(() -> suspensionCheckerAdapter.anySuspensionsAtTimeOf(show)).hasCauseInstanceOf(ServerErrorException.class);
     }
 
     private void cinemaHallSuspensionCheckReturns(Show show, boolean value) {
@@ -101,11 +101,11 @@ public class SuspensionCheckerAdapterTest {
     }
 
     private void cinemaHallSuspensionCheckReturnsError(Show show) {
-        stubSuspensionCheckError(show, "/halls/", show.getCinemaHallId());
+        stubSuspensionCheckError("/halls/", show.getCinemaHallId());
     }
 
     private void cinemaSuspensionCheckReturnsError(Show show) {
-        stubSuspensionCheckError(show, "/cinemas/", show.getCinemaId());
+        stubSuspensionCheckError("/cinemas/", show.getCinemaId());
     }
 
     private void stubSuspensionCheck(Show show, boolean value, String url, Long id) {
@@ -118,7 +118,7 @@ public class SuspensionCheckerAdapterTest {
             ));
     }
 
-    private void stubSuspensionCheckError(Show show, String url, Long cinemaHallId) {
+    private void stubSuspensionCheckError(String url, Long cinemaHallId) {
         wireMock.stubFor(get(urlPathEqualTo(url + cinemaHallId + "/suspensions"))
             .willReturn(aResponse()
                 .withStatus(500)
