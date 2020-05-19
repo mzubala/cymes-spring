@@ -1,5 +1,6 @@
 package pl.com.bottega.cymes.showscheduler.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Value
 @Builder
+@AllArgsConstructor
 public class ScheduleShowCommand {
     @NonNull
     private final UUID showId;

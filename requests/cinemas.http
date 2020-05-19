@@ -111,3 +111,16 @@ GET http://localhost:8080/cinemas/rest/cinemas/1?at=05/01/2020 10:20
 Content-Type: application/json
 
 ###
+
+POST http://localhost:8080/showscheduler/rest/shows
+Content-Type: application/json
+
+{
+  "id": "a2f004c4-7f58-40be-8c1f-df1fb186fc7e",
+  "movieId": 1,
+  "cinemaId": 2,
+  "cinemaHallId": 3,
+  "start": "24/05/2020 22:30"
+}
+
+###
