@@ -11,11 +11,15 @@ import pl.com.bottega.cymes.showscheduler.Resources;
 import pl.com.bottega.cymes.showscheduler.adapters.JPAShowRepository;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ShowExample;
+import pl.com.bottega.cymes.showscheduler.domain.ShowRepository;
+import pl.com.bottega.cymes.showscheduler.domain.ShowRepository.ShowNotFoundException;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.time.Instant;
+import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.jboss.shrinkwrap.resolver.api.maven.Maven.resolver;
 
@@ -68,6 +72,11 @@ public class JPAShowRepositoryTest {
         assertThat(jpaShowRepository.anyShowsCollidingWith(show("18:00", "20:40"))).isTrue();
         assertThat(jpaShowRepository.anyShowsCollidingWith(show("18:45", "20:40"))).isTrue();
         assertThat(jpaShowRepository.anyShowsCollidingWith(show("18:46", "20:40"))).isFalse();
+    }
+
+    @Test
+    public void throwsExceptionWhenShowIdIsInvalid() {
+        assertThatThrownBy(() -> jpaShowRepository.get(UUID.randomUUID())).isInstanceOf(ShowNotFoundException.class);
     }
 
     private Show show(String startHour, String endHour) {
