@@ -22,11 +22,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
-import static java.time.temporal.ChronoUnit.DAYS;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static pl.com.bottega.cymes.showscheduler.integration.DeploymentFactory.wireMockRule;
 
