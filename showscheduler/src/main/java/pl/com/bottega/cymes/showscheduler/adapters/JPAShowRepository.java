@@ -30,6 +30,8 @@ public class JPAShowRepository implements ShowRepository {
         return entityManager.createNamedQuery(ShowEntity.COUNT_COLLIDING_SHOWS, Long.class)
             .setParameter("ns", show.getStart())
             .setParameter("ne", show.getEnd())
+            .setParameter("cinemaId", show.getCinemaId())
+            .setParameter("cinemaHallId", show.getCinemaHallId())
             .getSingleResult() > 0;
     }
 
@@ -47,10 +49,12 @@ public class JPAShowRepository implements ShowRepository {
     @NamedQuery(
         name = ShowEntity.COUNT_COLLIDING_SHOWS,
         query = "SELECT count(s) FROM Show s WHERE " +
-            "(:ns <= s.start AND :ne >= s.start AND :ne <= s.end) OR " +
+            "((:ns <= s.start AND :ne >= s.start AND :ne <= s.end) OR " +
             "(:ns <= s.start AND :ne >= s.end)  OR" +
             "(:ns >= s.start AND :ne <= s.end) OR " +
-            "(:ns >= s.start AND :ns <= s.end AND :ne >= s.end)"
+            "(:ns >= s.start AND :ns <= s.end AND :ne >= s.end)) AND " +
+            "s.cinemaId = :cinemaId AND " +
+            "s.cinemaHallId = :cinemaHallId"
     )
     @NoArgsConstructor
     public static class ShowEntity {

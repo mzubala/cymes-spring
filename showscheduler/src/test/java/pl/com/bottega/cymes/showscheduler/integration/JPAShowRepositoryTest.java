@@ -77,6 +77,8 @@ public class JPAShowRepositoryTest {
         return new ShowExample()
             .withStart(Instant.parse(start))
             .withEnd(Instant.parse(end))
+            .withCinemaId(1L)
+            .withCinemaHallId(1L)
             .toShow();
     }
 }
