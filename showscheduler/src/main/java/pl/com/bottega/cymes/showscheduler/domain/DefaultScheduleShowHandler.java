@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @AllArgsConstructor
-class DefaultScheduleShowHandler implements ScheduleShowHandler {
+public class DefaultScheduleShowHandler implements ScheduleShowHandler {
 
     @NonNull
     private final MovieCatalog movieCatalog;

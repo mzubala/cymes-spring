@@ -6,20 +6,18 @@ import org.jboss.logging.Logger;
 import pl.com.bottega.cymes.showscheduler.domain.OperationLocker;
 
 import javax.annotation.Resource;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceContext;
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+import javax.persistence.*;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import java.io.Serializable;
 import java.util.function.Supplier;
 
+@Dependent
 public class JPAOperationLocker implements OperationLocker {
 
-    @PersistenceContext
+    @Inject
     private EntityManager entityManager;
 
     private Logger logger = Logger.getLogger(JPAOperationLocker.class);

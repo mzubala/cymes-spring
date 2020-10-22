@@ -4,18 +4,15 @@ import lombok.NoArgsConstructor;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ShowRepository;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
+import javax.enterprise.context.Dependent;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.UUID;
 
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
+@Dependent
 public class JPAShowRepository implements ShowRepository {
 
     @PersistenceContext

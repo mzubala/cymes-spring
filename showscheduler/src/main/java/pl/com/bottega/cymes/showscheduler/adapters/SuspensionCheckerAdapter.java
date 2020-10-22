@@ -5,9 +5,11 @@ import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.SuspensionChecker;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.sql.Date;
 
+@Dependent
 public class SuspensionCheckerAdapter implements SuspensionChecker {
 
     @Inject
