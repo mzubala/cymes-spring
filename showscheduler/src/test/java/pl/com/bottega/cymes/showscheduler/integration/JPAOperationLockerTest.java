@@ -81,7 +81,7 @@ public class JPAOperationLockerTest {
         Instant start = Instant.now().plusMillis(10);
         Instant end = Instant.now().plusMillis(1000000);
         Runnable operation = () -> {
-            var show = new ShowExample().withCinemaHallId(1L).withCinemaId(1L).withStart(start).withEnd(end).toShow();
+            var show = new ShowExample().withCinemaHallId(10L).withCinemaId(10L).withStart(start).withEnd(end).toShow();
             locker.lock(show.getCinemaId().toString(), show.getCinemaHallId().toString(), () -> {
                 if (!jpaShowRepository.anyShowsCollidingWith(show)) {
                     jpaShowRepository.save(show);
