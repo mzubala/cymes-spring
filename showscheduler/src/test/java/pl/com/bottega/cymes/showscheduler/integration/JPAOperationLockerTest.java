@@ -10,6 +10,8 @@ import pl.com.bottega.cymes.showscheduler.adapters.JPAShowRepository;
 import pl.com.bottega.cymes.showscheduler.domain.ShowExample;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -32,6 +34,9 @@ public class JPAOperationLockerTest {
     public static Archive<?> createTestArchive() {
         return DeploymentFactory.createTestArchive();
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Test
     public void createsShowWithinLocker() {
@@ -73,11 +78,16 @@ public class JPAOperationLockerTest {
         // given
         var threadsCount = 10;
         var executorService = Executors.newFixedThreadPool(threadsCount);
-        var show = new ShowExample().withStart(Instant.now().plusMillis(10)).withEnd(Instant.now().plusMillis(1000000)).toShow();
+        Instant start = Instant.now().plusMillis(10);
+        Instant end = Instant.now().plusMillis(1000000);
         Runnable operation = () -> {
-            if (!jpaShowRepository.anyShowsCollidingWith(show)) {
-                jpaShowRepository.save(show);
-            }
+            var show = new ShowExample().withCinemaHallId(1L).withCinemaId(1L).withStart(start).withEnd(end).toShow();
+            locker.lock(show.getCinemaId().toString(), show.getCinemaHallId().toString(), () -> {
+                if (!jpaShowRepository.anyShowsCollidingWith(show)) {
+                    jpaShowRepository.save(show);
+                };
+                return null;
+            });
         };
 
         // when
@@ -92,6 +102,7 @@ public class JPAOperationLockerTest {
         executorService.shutdown();
 
         // then
-        assertThat(jpaShowRepository.get(show.getId())).isNotNull();
+        List results = entityManager.createQuery("SELECT e FROM Show e").getResultList();
+        assertThat(results).hasSize(1);
     }
 }
