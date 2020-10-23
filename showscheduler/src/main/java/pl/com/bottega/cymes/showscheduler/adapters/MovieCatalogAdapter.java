@@ -7,8 +7,10 @@ import pl.com.bottega.cymes.showscheduler.domain.Movie;
 import pl.com.bottega.cymes.showscheduler.domain.MovieCatalog;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+@Dependent
 public class MovieCatalogAdapter implements MovieCatalog {
 
     private MoviesClient moviesClient;

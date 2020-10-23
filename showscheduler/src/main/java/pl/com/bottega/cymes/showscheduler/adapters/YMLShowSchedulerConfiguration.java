@@ -2,13 +2,15 @@ package pl.com.bottega.cymes.showscheduler.adapters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.SneakyThrows;
 import pl.com.bottega.cymes.showscheduler.domain.ShowSchedulerConfiguration;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.time.Duration;
 
+@Dependent
 public class YMLShowSchedulerConfiguration implements ShowSchedulerConfiguration {
 
     private static final String YAML_PATH = "/application.yml";
@@ -19,7 +21,8 @@ public class YMLShowSchedulerConfiguration implements ShowSchedulerConfiguration
     private ShowSchedulerProps props;
 
     @PostConstruct
-    public void init() throws IOException {
+    @SneakyThrows
+    public void init() {
         props = objectMapper.readValue(this.getClass().getResourceAsStream(YAML_PATH), ShowSchedulerProps.class);
     }
 
