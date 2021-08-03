@@ -1,0 +1,25 @@
+services:
+  cinemas:
+    build: ./cinemas
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  shows:
+    build: ./cinemas
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - APP_DB_USER=app
+      - APP_DB_PASS=app
