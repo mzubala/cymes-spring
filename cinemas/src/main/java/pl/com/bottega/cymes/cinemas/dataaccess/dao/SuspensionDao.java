@@ -1,11 +1,13 @@
 package pl.com.bottega.cymes.cinemas.dataaccess.dao;
 
+import org.springframework.stereotype.Repository;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Suspension;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
 
 import java.time.Instant;
 import java.util.List;
 
+@Repository
 public class SuspensionDao extends GenericDao<Suspension, Long> {
     public List<SuspensionDto> getActiveCinemaSuspensions(Long cinemaId) {
         return entityManager.createNamedQuery("Suspension.getActiveCinemaSuspensions")
