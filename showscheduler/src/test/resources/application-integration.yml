@@ -1,0 +1,2 @@
+show-scheduler:
+  reservation-buffer: PT1M
