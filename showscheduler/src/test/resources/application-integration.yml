@@ -1,0 +1,10 @@
+show-scheduler:
+  reservation-buffer: PT1M
+
+clients:
+  cinemas:
+    url: http://localhost:9898
+    readTimeout: 1000
+  movies:
+    url: http://localhost:9898
+    readTimeout: 1000

@@ -1,44 +1,38 @@
 package pl.com.bottega.cymes.showscheduler.adapters;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 import pl.com.bottega.cymes.showscheduler.domain.Movie;
 import pl.com.bottega.cymes.showscheduler.domain.MovieCatalog;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
+@Component
+@RequiredArgsConstructor
 public class MovieCatalogAdapter implements MovieCatalog {
 
-    private MoviesClient moviesClient;
-
-    @Inject
-    private YMLShowSchedulerConfiguration configuration;
-
-    @PostConstruct
-    public void init() {
-        moviesClient = new ResteasyClientBuilder().build().target(configuration.moviesUrl()).proxy(MoviesClient.class);
-    }
+    private final WebClient moviesClient;
+    private final ReactiveCircuitBreakerFactory cbFactory;
 
     @Override
     public Movie get(Long movieId) {
-        return new GetMovieCommand(movieId).execute();
+        return moviesClient
+                .get()
+                .uri("/movies/{movieId}", movieId)
+                .retrieve().bodyToMono(MovieResponse.class)
+                .transform(it -> cbFactory.create("movies-circuit-breaker").run(it))
+                .map(MovieResponse::toDomain)
+                .block();
     }
+}
 
-    class GetMovieCommand extends HystrixCommand<Movie> {
+@Data
+class MovieResponse {
+    private Long id;
+    private Integer durationMinutes;
 
-        private final Long movieId;
-
-        protected GetMovieCommand(Long movieId) {
-            super(HystrixCommandGroupKey.Factory.asKey("MoviesGroup"));
-            this.movieId = movieId;
-        }
-
-        @Override
-        protected Movie run() throws Exception {
-            var json = moviesClient.getMovie(movieId);
-            return new Movie(json.getId(), json.getDurationMinutes());
-        }
+    Movie toDomain() {
+        return new Movie(id, durationMinutes);
     }
 }
