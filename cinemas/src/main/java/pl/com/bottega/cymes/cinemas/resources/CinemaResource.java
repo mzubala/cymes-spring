@@ -1,7 +1,14 @@
 package pl.com.bottega.cymes.cinemas.resources;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.hibernate.exception.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pl.com.bottega.cymes.cinemas.resources.request.CreateCinemaRequest;
 import pl.com.bottega.cymes.cinemas.resources.request.SuspendRequest;
 import pl.com.bottega.cymes.cinemas.services.CinemaService;
@@ -13,51 +20,33 @@ import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionCheckDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
+import javax.validation.Valid;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
-@Path("/cinemas")
-@Consumes({"application/json"})
-@Produces({"application/json"})
+@RequestMapping("/cinemas")
+@RestController
+@RequiredArgsConstructor
 public class CinemaResource {
 
-    @Inject
-    private CinemaService cinemaService;
+    private final CinemaService cinemaService;
 
-    @POST
-    public Response create(CreateCinemaRequest createCinemaRequest) {
+    @PostMapping
+    public void create(@Valid @RequestBody CreateCinemaRequest createCinemaRequest) {
         var cmd = new CreateCinemaCommand();
         cmd.setName(createCinemaRequest.getName());
         cmd.setCity(createCinemaRequest.getCity());
-        try {
-            cinemaService.create(cmd);
-        } catch(Exception ex) {
-            if(ExceptionUtils.indexOfType(ex, ConstraintViolationException.class) > -1) {
-                return Response.status(409).entity(new ExceptionMappers.Error("Duplicate cinema")).build();
-            }
-            throw ex;
-        }
-        return Response.ok().build();
+        cinemaService.create(cmd);
     }
 
-    @GET
+    @GetMapping
     public List<BasicCinemaInfoDto> getAll() {
         return cinemaService.getBasicCinemaInfo();
     }
 
-    @POST
-    @Path("/{id}/suspensions")
-    public void suspend(@PathParam("id") Long cinemaId, SuspendRequest suspendRequest) {
+    @PostMapping("/{id}/suspensions")
+    public void suspend(@PathVariable("id") Long cinemaId, @Valid @RequestBody SuspendRequest suspendRequest) {
         var cmd = new SuspendCommand();
         cmd.setId(cinemaId);
         cmd.setUntil(suspendRequest.getUntil());
@@ -65,29 +54,25 @@ public class CinemaResource {
         cinemaService.suspend(cmd);
     }
 
-    @DELETE
-    @Path("/suspensions/{id}")
-    public void cancelSuspension(@PathParam("id") Long suspensionId) {
+    @DeleteMapping("/suspensions/{id}")
+    public void cancelSuspension(@PathVariable("id") Long suspensionId) {
         var cmd = new CancelSuspensionCommand();
         cmd.setSuspensionId(suspensionId);
         cinemaService.cancelSuspension(cmd);
     }
 
-    @GET
-    @Path("/{cinemaId}/suspensions")
-    public List<SuspensionDto> getSuspensions(@PathParam("cinemaId") Long cinemaId) {
+    @GetMapping("/{cinemaId}/suspensions")
+    public List<SuspensionDto> getSuspensions(@PathVariable("cinemaId") Long cinemaId) {
         return cinemaService.getSuspensions(cinemaId);
     }
 
-    @GET
-    @Path("/{cinemaId}/suspensions/check")
-    public SuspensionCheckDto suspensionCheck(@PathParam("cinemaId") Long cinemaId, @QueryParam("from") Date from, @QueryParam("until") Date until) {
-        return new SuspensionCheckDto(cinemaService.isSuspended(cinemaId, from.toInstant(), until.toInstant()));
+    @GetMapping("/{cinemaId}/suspensions/check")
+    public SuspensionCheckDto suspensionCheck(@PathVariable("cinemaId") Long cinemaId, @RequestParam("from") Instant from, @RequestParam("until") Instant until) {
+        return new SuspensionCheckDto(cinemaService.isSuspended(cinemaId, from, until));
     }
 
-    @GET
-    @Path("/{id}")
-    public DetailedCinemaInfoDto get(@PathParam("id") Long cinemaId, @QueryParam("at") Date at) {
+    @GetMapping("/{id}")
+    public DetailedCinemaInfoDto get(@PathVariable("id") Long cinemaId, @RequestParam("at") Date at) {
         return cinemaService.getDetailedCinemaInfo(cinemaId, at == null ? null : at.toInstant());
     }
 }
