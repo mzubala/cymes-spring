@@ -2,46 +2,56 @@ package pl.com.bottega.cymes.cinemas.resources;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.postgresql.util.PSQLException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import pl.com.bottega.cymes.cinemas.dataaccess.PSQLExceptionWrapper;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.GenericDao;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
-public class ExceptionMappers {
+@ControllerAdvice
+public class ExceptionMappers extends ResponseEntityExceptionHandler {
 
-    @Provider
-    public static class EntityNotFoundExceptionMapper implements ExceptionMapper<GenericDao.EntityNotFoundException> {
-        @Override
-        public Response toResponse(GenericDao.EntityNotFoundException exception) {
-            return Response.status(404).entity(new Error(exception)).build();
-        }
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        Stream<ValidationError> fieldErrors = ex.getBindingResult().getFieldErrors().stream().map((error) ->
+                new ValidationError(error.getField(), error.getDefaultMessage())
+        );
+        Stream<ValidationError> globalErrors = ex.getBindingResult().getGlobalErrors().stream().map((error) ->
+                new ValidationError(error.getObjectName(), error.getDefaultMessage())
+        );
+        return new ResponseEntity<>(new ValidationErrors(Stream.concat(fieldErrors, globalErrors).collect(toSet())), HttpStatus.BAD_REQUEST);
     }
 
-    @Provider
-    public static class JPAEntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
-        @Override
-        public Response toResponse(EntityNotFoundException exception) {
-            return Response.status(404).entity(new Error(exception)).build();
-        }
+    @ExceptionHandler(GenericDao.EntityNotFoundException.class)
+    public ResponseEntity<Error> handleEntityNotFoundException(GenericDao.EntityNotFoundException ex) {
+        return new ResponseEntity<>(new Error(ex), HttpStatus.NOT_FOUND);
     }
 
-    @Provider
-    public static class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Error> handleJPAEntityNotFoundException(EntityNotFoundException ex) {
+        return new ResponseEntity<>(new Error(ex), HttpStatus.NOT_FOUND);
+    }
 
-        @Override
-        public Response toResponse(ConstraintViolationException exception) {
-            return Response.status(400).entity(new ValidationErrors(exception.getConstraintViolations())).build();
+    @ExceptionHandler(PSQLException.class)
+    public ResponseEntity<Error> handlePSQLException(PSQLException ex) throws Exception {
+        PSQLExceptionWrapper psqlExceptionWrapper = new PSQLExceptionWrapper(ex);
+        if (psqlExceptionWrapper.isUniqueConstraintViolation()) {
+            return new ResponseEntity<>(new Error(ex.getMessage()), CONFLICT);
         }
+        throw ex;
     }
 
     @Data
@@ -55,31 +65,15 @@ public class ExceptionMappers {
     }
 
     @Data
+    @AllArgsConstructor
     public static class ValidationErrors {
-
         private Set<ValidationError> errors;
-
-        public ValidationErrors(Set<ConstraintViolation<?>> violations) {
-            Map<String, Set<String>> errorsMap = violations.stream().collect(
-                groupingBy(
-                    (violation) -> violation.getPropertyPath().toString(), mapping(ConstraintViolation::getMessage, toSet())
-                )
-            );
-            this.errors = errorsMap.entrySet().stream()
-                .map((entry) -> new ValidationError(entry.getKey(), entry.getValue()))
-                .collect(toSet());
-        }
-
     }
 
     @Data
+    @AllArgsConstructor
     public static class ValidationError {
-        private Set<String> messages;
+        private String message;
         private String field;
-
-        ValidationError(String field, Set<String> messages) {
-            this.messages = messages;
-            this.field = field;
-        }
     }
 }
