@@ -1,10 +1,10 @@
 package pl.com.bottega.cymes.showscheduler.domain;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DefaultScheduleShowHandlerTest {
 
     @Mock
@@ -36,7 +36,7 @@ public class DefaultScheduleShowHandlerTest {
 
     private ScheduleShowCommand cmd;
 
-    @Before
+    @BeforeEach
     public void setup() {
         // given
         handler = new DefaultScheduleShowHandler(movieCatalog, showRepository, suspensionChecker, operationLocker, configuration);
