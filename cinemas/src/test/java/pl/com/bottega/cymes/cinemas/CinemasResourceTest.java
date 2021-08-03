@@ -1,84 +1,60 @@
 package pl.com.bottega.cymes.cinemas;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import pl.com.bottega.cymes.cinemas.dataaccess.model.PersistentCommand;
-import pl.com.bottega.cymes.cinemas.resources.CinemaResource;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.support.TransactionTemplate;
+import pl.com.bottega.cymes.cinemas.dataaccess.dao.PersistentCommandDao;
 import pl.com.bottega.cymes.cinemas.resources.request.CreateCinemaRequest;
+import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaInfoDto;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.UUID;
-
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jboss.shrinkwrap.resolver.api.maven.Maven.resolver;
 
-
-@RunWith(Arquillian.class)
+@IntegrationTest
 public class CinemasResourceTest {
 
     private static final String REST_ROOT = "rest";
 
-    @Inject
-    private CinemaResource cinemaResource;
+    @Autowired
+    private CinemasClient cinemasClient;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private PersistentCommandDao persistentCommandDao;
 
-    @Deployment
-    public static Archive<?> createTestArchive() {
-        return ShrinkWrap
-            .create(WebArchive.class, "test.war")
-            .addPackages(true, CinemasResourceTest.class.getPackage())
-            .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
-            .addAsWebInfResource("cinemas-ds.xml")
-            .addAsWebInfResource("beans.xml")
-            .addAsLibraries(resolver().loadPomFromFile("pom.xml").resolve("org.assertj:assertj-core", "commons-lang:commons-lang")
-                .withTransitivity().as(File.class));
-    }
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
     @Test
     public void createsAndReturnsCinemas() {
         // when
         var request = new CreateCinemaRequest();
         request.setCity("Warszawa");
-        request.setName("Arkadia" + UUID.randomUUID().toString());
-        cinemaResource.create(request);
-        var cinemas = cinemaResource.getAll();
+        request.setName("Arkadia");
+        var createCinemaResponse = cinemasClient.createCinema(request);
+        var getCinemasResponse = cinemasClient.getCinemas();
 
         // then
-        assertThat(cinemas).anyMatch((cinema) -> cinema.getCity().equals(request.getCity()) &&
-            cinema.getName().equals(request.getName()) &&
-            cinema.getId() != null
-        );
+        createCinemaResponse.expectStatus().isOk();
+        getCinemasResponse
+                .expectStatus().isOk()
+                .expectBodyList(BasicCinemaInfoDto.class)
+                .consumeWith(results ->
+                        assertThat(results.getResponseBody())
+                                .hasSize(1)
+                                .anyMatch(cinema -> cinema.getCity().equals("Warszawa") && cinema.getName().equals("Arkadia"))
+                );
     }
 
     @Test
-    @RunAsClient
-    public void returnsBadRequestWhenCreateCinemaRequestIsInvalid(@ArquillianResource URL contextPath) throws URISyntaxException {
+    public void returnsBadRequestWhenCreateCinemaRequestIsInvalid() {
         // when
-        var response = createCinema(contextPath, "{}");
+        var request = new CreateCinemaRequest();
+        request.setCity(null);
+        request.setName("Arkadia");
+        var createCinemaResponse = cinemasClient.createCinema(request);
 
         // then
-        assertThat(response.getStatusInfo()).isEqualTo(BAD_REQUEST);
+        createCinemaResponse.expectStatus().isBadRequest();
     }
 
     @Test
@@ -86,42 +62,34 @@ public class CinemasResourceTest {
         //when
         var request = new CreateCinemaRequest();
         request.setCity("Warszawa");
-        request.setName("Arkadia" + UUID.randomUUID().toString());
-        cinemaResource.create(request);
+        request.setName("Arkadia");
+        cinemasClient.createCinema(request);
 
         // then
-        var persistentCommands = entityManager.createQuery("FROM PersistentCommand pc", PersistentCommand.class).getResultList();
-        assertThat(persistentCommands).anyMatch(cmd ->
-            cmd.getType().equals("CreateCinemaCommand") &&
-                cmd.getContent().contains("Warszawa") &&
-                cmd.getContent().contains(request.getName())
-        );
+        transactionTemplate.execute((callback) -> {
+            var persistentCommands = persistentCommandDao.findAll();
+            assertThat(persistentCommands).anyMatch(cmd ->
+                    cmd.getType().equals("CreateCinemaCommand") &&
+                            cmd.getContent().contains("Warszawa") &&
+                            cmd.getContent().contains(request.getName())
+            );
+            return null;
+        });
     }
 
     @Test
-    public void doesNotAllowToDuplicateCinemas(@ArquillianResource URL contextPath) throws Exception {
+    public void doesNotAllowToDuplicateCinemas() {
         // given
         var request = new CreateCinemaRequest();
         request.setCity("Warszawa");
-        request.setName("Arkadia" + UUID.randomUUID().toString());
-        var requestString = new ObjectMapper().writeValueAsString(request);
+        request.setName("Arkadia");
 
         // when
-        var firstResponse = createCinema(contextPath, requestString);
-        var secondResponse = createCinema(contextPath, requestString);
+        var firstResponse = cinemasClient.createCinema(request);
+        var secondResponse = cinemasClient.createCinema(request);
 
         // then
-        assertThat(firstResponse.getStatus()).isEqualTo(200);
-        assertThat(secondResponse.getStatus()).isEqualTo(409);
-    }
-
-    private Response createCinema(@ArquillianResource URL contextPath, String requestJson) throws URISyntaxException {
-        var client = ClientBuilder.newClient();
-        try {
-            var uri = UriBuilder.fromUri(contextPath.toURI()).path(REST_ROOT + "/cinemas").port(8080).build();
-            return client.target(uri).request().post(Entity.entity(requestJson, MediaType.APPLICATION_JSON));
-        } finally {
-            client.close();
-        }
+        firstResponse.expectStatus().isOk();
+        secondResponse.expectStatus().isEqualTo(HttpStatus.CONFLICT);
     }
 }

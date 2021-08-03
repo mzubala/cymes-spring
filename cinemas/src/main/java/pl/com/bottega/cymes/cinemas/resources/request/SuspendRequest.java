@@ -2,13 +2,17 @@ package pl.com.bottega.cymes.cinemas.resources.request;
 
 import lombok.Data;
 
-import javax.json.bind.annotation.JsonbDateFormat;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Data
 public class SuspendRequest {
-    @JsonbDateFormat("dd/MM/yyyy HH:mm")
+    @NotNull
+    @Future
     private Instant from;
-    @JsonbDateFormat("dd/MM/yyyy HH:mm")
+
+    @NotNull
+    @Future
     private Instant until;
 }

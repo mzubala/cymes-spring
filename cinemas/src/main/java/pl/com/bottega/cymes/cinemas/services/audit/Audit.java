@@ -1,6 +1,5 @@
-package pl.com.bottega.cymes.cinemas.services.interceptors;
+package pl.com.bottega.cymes.cinemas.services.audit;
 
-import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -9,7 +8,6 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@InterceptorBinding
 @Target({TYPE, METHOD})
 @Retention(RUNTIME)
 @Inherited
