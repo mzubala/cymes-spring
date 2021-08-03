@@ -1,6 +1,5 @@
 package pl.com.bottega.cymes.cinemas.dataaccess.model;
 
-import jdk.jfr.Name;
 import lombok.Data;
 
 import javax.persistence.Entity;

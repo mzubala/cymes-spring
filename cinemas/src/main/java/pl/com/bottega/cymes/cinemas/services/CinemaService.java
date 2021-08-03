@@ -1,5 +1,8 @@
 package pl.com.bottega.cymes.cinemas.services;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.SuspensionDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Cinema;
@@ -11,23 +14,20 @@ import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
 
-@Stateless
+@Component
+@RequiredArgsConstructor
 public class CinemaService {
 
-    @Inject
-    private CinemaDao cinemaDao;
+    private final CinemaDao cinemaDao;
 
-    @Inject
-    private CinemaHallService cinemaHallService;
+    private final CinemaHallService cinemaHallService;
 
-    @Inject
-    private SuspensionDao suspensionDao;
+    private final SuspensionDao suspensionDao;
 
+    @Transactional
     public void create(CreateCinemaCommand cmd) {
         var cinema = new Cinema();
         cinema.setName(cmd.getName());
@@ -35,6 +35,7 @@ public class CinemaService {
         cinemaDao.save(cinema);
     }
 
+    @Transactional
     public void suspend(SuspendCommand cmd) {
         var cinema = cinemaDao.getReference(cmd.getId());
         var suspension = new Suspension();
@@ -45,15 +46,18 @@ public class CinemaService {
         suspensionDao.save(suspension);
     }
 
+    @Transactional
     public void cancelSuspension(CancelSuspensionCommand cmd) {
         var suspension = suspensionDao.find(cmd.getSuspensionId());
         suspension.setActive(false);
     }
 
+    @Transactional(readOnly = true)
     public List<BasicCinemaInfoDto> getBasicCinemaInfo() {
         return cinemaDao.getBasicCinemaInfo();
     }
 
+    @Transactional(readOnly = true)
     public DetailedCinemaInfoDto getDetailedCinemaInfo(Long cinemaId, Instant at) {
         var info = cinemaDao.getDetailedCinemaInfo(cinemaId);
         if(at != null) {
@@ -63,10 +67,12 @@ public class CinemaService {
         return info;
     }
 
+    @Transactional(readOnly = true)
     public List<SuspensionDto> getSuspensions(Long cinemaId) {
         return suspensionDao.getActiveCinemaSuspensions(cinemaId);
     }
 
+    @Transactional(readOnly = true)
     public Boolean isSuspended(Long cinemaId, Instant at) {
         return suspensionDao.isCinemaSuspended(cinemaId, at);
     }

@@ -1,11 +1,13 @@
 package pl.com.bottega.cymes.cinemas.dataaccess.dao;
 
+import org.springframework.stereotype.Repository;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Cinema;
 import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaInfoDto;
 
 import java.util.List;
 
+@Repository
 public class CinemaDao extends GenericDao<Cinema, Long> {
     public List<BasicCinemaInfoDto> getBasicCinemaInfo() {
         return entityManager.createNamedQuery("Cinema.getBasicCinemaInfo").getResultList();
