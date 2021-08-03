@@ -2,26 +2,25 @@ package pl.com.bottega.cymes.showscheduler.adapters;
 
 import lombok.Data;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pl.com.bottega.cymes.showscheduler.domain.ScheduleShowCommand;
 import pl.com.bottega.cymes.showscheduler.domain.ScheduleShowHandler;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import java.time.Instant;
 import java.util.UUID;
 
-@Path("/shows")
-@Consumes({"application/json"})
-@Produces({"application/json"})
+@RestController
+@RequestMapping("/shows")
+@RequiredArgsConstructor
 public class ShowSchedulerResource {
 
-    @Inject
-    private ScheduleShowHandler handler;
 
-    @POST
+    private final ScheduleShowHandler handler;
+
+    @PostMapping
     public void scheduleShow(ScheduleShowRequest request) {
         var command = request.toCommand();
         handler.handle(command);
