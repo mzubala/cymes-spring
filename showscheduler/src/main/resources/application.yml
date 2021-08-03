@@ -1,3 +1,30 @@
-reservationBuffer: PT45M
-cinemasUrl: http://localhost:8080/cinemas/rest
-moviesUrl: http://localhost:8080/movies/rest
+show-scheduler:
+  reservation-buffer: PT45M
+
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/shows
+    username: app
+    password: app
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+  mvc:
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+      time: HH:mm:ss
+
+clients:
+  cinemas:
+    url: http://cinemas:8080
+    connectionTimeout: 100
+    readTimeout: 200
+  movies:
+    url: http://movies:8082
+    connectionTimeout: 100
+    readTimeout: 200

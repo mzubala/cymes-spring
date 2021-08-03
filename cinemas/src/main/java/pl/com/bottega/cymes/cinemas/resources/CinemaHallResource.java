@@ -1,5 +1,14 @@
 package pl.com.bottega.cymes.cinemas.resources;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pl.com.bottega.cymes.cinemas.resources.request.CreateCinemaHallRequest;
 import pl.com.bottega.cymes.cinemas.resources.request.SuspendRequest;
 import pl.com.bottega.cymes.cinemas.resources.request.UpdateCinemaHallRequest;
@@ -11,28 +20,20 @@ import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaHallInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionCheckDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.validation.Valid;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
-@Path("/halls")
-@Consumes({"application/json"})
-@Produces({"application/json"})
+@RestController
+@RequestMapping("/halls")
+@RequiredArgsConstructor
 public class CinemaHallResource {
 
-    @Inject
-    private CinemaHallService cinemaHallService;
+    private final CinemaHallService cinemaHallService;
 
-    @POST
-    public void create(CreateCinemaHallRequest createCinemaHallRequest) {
+    @PostMapping
+    public void create(@Valid @RequestBody CreateCinemaHallRequest createCinemaHallRequest) {
         var cmd = new CreateCinemaHallCommand();
         cmd.setCinemaId(createCinemaHallRequest.getCinemaId());
         cmd.setName(createCinemaHallRequest.getName());
@@ -40,15 +41,13 @@ public class CinemaHallResource {
         cinemaHallService.create(cmd);
     }
 
-    @GET
-    @Path("/{hallId}")
-    public DetailedCinemaHallInfoDto get(@PathParam("hallId") Long cinemaHallId) {
+    @GetMapping("/{hallId}")
+    public DetailedCinemaHallInfoDto get(@PathVariable("hallId") Long cinemaHallId) {
         return cinemaHallService.getCinemaHall(cinemaHallId);
     }
 
-    @POST
-    @Path("/{hallId}/suspensions")
-    public void suspend(@PathParam("hallId") Long hallId, SuspendRequest suspendRequest) {
+    @PostMapping("/{hallId}/suspensions")
+    public void suspend(@PathVariable("hallId") Long hallId, @Valid @RequestBody SuspendRequest suspendRequest) {
         var cmd = new SuspendCommand();
         cmd.setId(hallId);
         cmd.setFrom(suspendRequest.getFrom());
@@ -56,24 +55,21 @@ public class CinemaHallResource {
         cinemaHallService.suspend(cmd);
     }
 
-    @PUT
-    @Path("/{hallId}")
-    public void update(@PathParam("hallId") Long hallId, UpdateCinemaHallRequest updateCinemaHallRequest) {
+    @PutMapping("/{hallId}")
+    public void update(@PathVariable("hallId") Long hallId, @Valid @RequestBody UpdateCinemaHallRequest updateCinemaHallRequest) {
         var cmd = new UpdateCinemaHallCommand();
         cmd.setLayout(updateCinemaHallRequest.getLayout());
         cmd.setCinemaHallId(hallId);
         cinemaHallService.updateCinemaHall(cmd);
     }
 
-    @GET
-    @Path("/{hallId}/suspensions")
-    public List<SuspensionDto> getSuspensions(@PathParam("hallId") Long hallId) {
+    @GetMapping("/{hallId}/suspensions")
+    public List<SuspensionDto> getSuspensions(@PathVariable("hallId") Long hallId) {
         return cinemaHallService.getSuspensions(hallId);
     }
 
-    @GET
-    @Path("/{hallId}/suspensions/check")
-    public SuspensionCheckDto suspensionCheck(@PathParam("hallId") Long hallId, @QueryParam("from") Date from, @QueryParam("until") Date until) {
-        return new SuspensionCheckDto(cinemaHallService.isSuspended(hallId, from.toInstant(), until.toInstant()));
+    @GetMapping("/{hallId}/suspensions/check")
+    public SuspensionCheckDto suspensionCheck(@PathVariable("hallId") Long hallId, @RequestParam("from") Instant from, @RequestParam("until") Instant until) {
+        return new SuspensionCheckDto(cinemaHallService.isSuspended(hallId, from, until));
     }
 }

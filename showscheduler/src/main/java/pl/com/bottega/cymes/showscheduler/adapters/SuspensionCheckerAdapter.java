@@ -1,65 +1,53 @@
 package pl.com.bottega.cymes.showscheduler.adapters;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerErrorException;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.SuspensionChecker;
-import rx.schedulers.Schedulers;
+import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import java.sql.Date;
-
-@Dependent
+@RequiredArgsConstructor
+@Component
 public class SuspensionCheckerAdapter implements SuspensionChecker {
 
-    @Inject
-    private YMLShowSchedulerConfiguration configuration;
-
-    private CinemasClient cinemasClient;
-
-    @PostConstruct
-    public void init() {
-        cinemasClient = new ResteasyClientBuilder().build().target(configuration.cinemasUrl()).proxy(CinemasClient.class);
-    }
+    private final WebClient cinemasClient;
 
     @Override
     public boolean anySuspensionsAtTimeOf(Show show) {
-        var cmd1 = new CheckCinemaHallSuspensionCommand(show);
-        var cmd2 = new CheckCinemaSuspensionCommand(show);
-        return cmd1.observe().zipWith(cmd2.observe(), (b1, b2) -> b1 || b2).subscribeOn(Schedulers.computation()).toBlocking().single();
+        return getSuspension(show, "cinemas", show.getCinemaId())
+                .zipWith(getSuspension(show, "halls", show.getCinemaHallId()))
+                .map(responses -> responses.getT1().isSuspended() || responses.getT2().isSuspended())
+                .block();
     }
 
-    class CheckCinemaSuspensionCommand extends HystrixCommand<Boolean> {
+    private Mono<SuspensionResponse> getSuspension(Show show, String object, Long id) {
+        return cinemasClient
+                .get()
+                .uri(builder ->
+                        builder
+                                .path("/" + object + "/{id}/suspensions")
+                                .queryParam("from", show.getStart())
+                                .queryParam("until", show.getEnd())
+                                .build(id)
 
-        private Show show;
-
-        public CheckCinemaSuspensionCommand(Show show) {
-            super(HystrixCommandGroupKey.Factory.asKey("CinemasGroup"));
-            this.show = show;
-        }
-
-        @Override
-        protected Boolean run() throws Exception {
-            return cinemasClient.checkCinemaSuspension(show.getCinemaId(), Date.from(show.getStart()), Date.from(show.getEnd())).getSuspended();
-        }
+                )
+                .exchangeToMono(this::toSuspensionResponse);
     }
 
-    class CheckCinemaHallSuspensionCommand extends HystrixCommand<Boolean> {
-
-        private Show show;
-
-        public CheckCinemaHallSuspensionCommand(Show show) {
-            super(HystrixCommandGroupKey.Factory.asKey("CinemasGroup"));
-            this.show = show;
-        }
-
-        @Override
-        protected Boolean run() throws Exception {
-            return cinemasClient.checkCinemaHallSuspension(show.getCinemaHallId(), Date.from(show.getStart()), Date.from(show.getEnd())).getSuspended();
+    private Mono<SuspensionResponse> toSuspensionResponse(ClientResponse response) {
+        if(response.statusCode().is2xxSuccessful()) {
+            return response.bodyToMono(SuspensionResponse.class);
+        } else {
+            return Mono.error(new ServerErrorException("Failed to get suspension", new IllegalStateException()));
         }
     }
+}
 
+@Data
+class SuspensionResponse {
+    private boolean suspended;
 }
