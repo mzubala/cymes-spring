@@ -1,45 +1,40 @@
-package pl.com.bottega.cymes.cinemas.services.interceptors;
+package pl.com.bottega.cymes.cinemas.services.audit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.PersistentCommandDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.PersistentCommand;
 import pl.com.bottega.cymes.cinemas.resources.security.UserProvider;
 import pl.com.bottega.cymes.cinemas.services.commands.UserCommand;
 
-import javax.annotation.Priority;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Audit
-@Interceptor
-@Priority(Interceptor.Priority.APPLICATION + 5)
-public class AuditInterceptor {
+@Component
+@Aspect
+@RequiredArgsConstructor
+public class AuditAspect {
 
-    @Inject
-    private UserProvider userProvider;
+    private final UserProvider userProvider;
 
-    @Inject
-    private PersistentCommandDao persistentCommandDao;
+    private final PersistentCommandDao persistentCommandDao;
 
-    @Inject
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    @AroundInvoke
-    public Object saveCommand(InvocationContext ctx) throws Exception {
+    @After(value = "@within(pl.com.bottega.cymes.cinemas.services.audit.Audit) || @annotation(pl.com.bottega.cymes.cinemas.services.audit.Audit)")
+    public void saveCommand(JoinPoint ctx) throws Throwable {
         var userId = userProvider.currentUserId();
-        var commands = Stream.of(ctx.getParameters())
+        var commands = Stream.of(ctx.getArgs())
             .filter((param) -> param instanceof UserCommand)
             .map((param) -> (UserCommand) param)
             .map((cmd) -> cmd.withUserId(userId))
             .collect(Collectors.toSet());
-        var result = ctx.proceed();
         commands.stream().map(this::toPersistenetCommand).forEach(persistentCommandDao::save);
-        return result;
     }
 
     private PersistentCommand toPersistenetCommand(UserCommand userCommand) {
