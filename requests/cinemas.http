@@ -5,7 +5,7 @@
 # * 'gtrp' and 'gtr' create a GET request with or without query parameters;
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
-POST http://localhost:8080/cinemas/rest/cinemas
+POST http://localhost:8080/cinemas
 Content-Type: application/json
 
 {
@@ -15,56 +15,56 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/cinemas
+GET http://localhost:8080/cinemas
 Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/cinemas/1/suspensions/check?at=05/01/2020
+GET http://localhost:8080/cinemas/4/suspensions/check?at=2020-01-05
 Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/halls/2/suspensions/check?at=05/01/2020
+GET http://localhost:8080/halls/2/suspensions/check?at=2020-01-05
 Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/halls/2
+GET http://localhost:8080/halls/2
 Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/halls/1/suspensions
+GET http://localhost:8080/halls/1/suspensions
 Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/cinemas/rest/cinemas/1/suspensions
+POST http://localhost:8080/cinemas/4/suspensions
 Content-Type: application/json
 
 {
-  "from": "01/01/2020 10:00",
-  "until": "01/10/2020 12:00"
+  "from": "2020-01-01T10:00:00Z",
+  "until": "2020-01-10T12:00:00Z"
 }
 
 ###
 
-DELETE http://localhost:8080/cinemas/rest/cinemas/suspensions/1
+DELETE http://localhost:8080/cinemas/suspensions/1
 Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/cinemas/1/suspensions
+GET http://localhost:8080/cinemas/1/suspensions
 Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/cinemas/rest/halls
+POST http://localhost:8080/halls
 Content-Type: application/json
 
 {
-  "cinemaId": "1",
+  "cinemaId": "4",
   "name": "sala-2",
   "layout": [
     {
@@ -92,22 +92,22 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/cinemas/rest/halls/1
+GET http://localhost:8080/halls/1
 Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/cinemas/rest/halls/2/suspensions
+POST http://localhost:8080/halls/2/suspensions
 Content-Type: application/json
 
 {
-  "from": "01/01/2020 10:00",
-  "until": "01/10/2020 12:00"
+  "from": "2020-01-01T10:00:00Z",
+  "until": "2020-01-10T12:00:00Z"
 }
 
 ###
 
-GET http://localhost:8080/cinemas/rest/cinemas/1?at=05/01/2020 10:20
+GET http://localhost:8080/cinemas/4?at=2020-01-05T10:20:00Z
 Content-Type: application/json
 
 ###

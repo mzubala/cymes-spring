@@ -1,5 +1,8 @@
 package pl.com.bottega.cymes.cinemas.services;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaHallDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.SuspensionDao;
@@ -15,26 +18,22 @@ import pl.com.bottega.cymes.cinemas.services.dto.RowDto;
 import pl.com.bottega.cymes.cinemas.services.dto.RowElementDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
 import java.time.Instant;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Stateless
+@Component
+@RequiredArgsConstructor
 public class CinemaHallService {
 
-    @Inject
-    private CinemaDao cinemaDao;
+    private final CinemaDao cinemaDao;
 
-    @Inject
-    private CinemaHallDao cinemaHallDao;
+    private final CinemaHallDao cinemaHallDao;
 
-    @Inject
-    private SuspensionDao suspensionDao;
+    private final SuspensionDao suspensionDao;
 
+    @Transactional
     public void create(CreateCinemaHallCommand cmd) {
         var cinema = cinemaDao.getReference(cmd.getCinemaId());
         var hall = new CinemaHall();
@@ -45,11 +44,13 @@ public class CinemaHallService {
         cinemaHallDao.save(hall);
     }
 
+    @Transactional
     public void updateCinemaHall(UpdateCinemaHallCommand cmd) {
         var hall = cinemaHallDao.find(cmd.getCinemaHallId());
         hall.setRows(cmd.getLayout().stream().map(this::toRow).collect(toList()));
     }
 
+    @Transactional
     public void suspend(SuspendCommand cmd) {
         var suspension = new Suspension();
         suspension.setFrom(cmd.getFrom());
@@ -58,6 +59,7 @@ public class CinemaHallService {
         suspensionDao.save(suspension);
     }
 
+    @Transactional(readOnly = true)
     public DetailedCinemaHallInfoDto getCinemaHall(Long id) {
         var cinemaHall = cinemaHallDao.find(id);
         var result = new DetailedCinemaHallInfoDto();
