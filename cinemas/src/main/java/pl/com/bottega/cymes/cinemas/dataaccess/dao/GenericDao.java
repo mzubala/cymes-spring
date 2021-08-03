@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class GenericDao<EntityType, PrimaryKeyType> {
 
@@ -30,6 +31,12 @@ public class GenericDao<EntityType, PrimaryKeyType> {
 
     public EntityType getReference(PrimaryKeyType id) {
         return entityManager.getReference(entityTypeClass, id);
+    }
+
+    public Stream<EntityType> findAll() {
+        return entityManager
+                .createQuery(String.format("SELECT e FROM %s e", entityTypeClass.getSimpleName()))
+                .getResultStream();
     }
 
     public static class EntityNotFoundException extends RuntimeException {

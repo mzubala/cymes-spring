@@ -1,0 +1,8 @@
+show-scheduler:
+  reservation-buffer: PT1M
+
+clients:
+  cinemas:
+    url: http://localhost:9898
+  movies:
+    url: http://localhost:9898

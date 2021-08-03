@@ -1,42 +1,28 @@
 package pl.com.bottega.cymes.showscheduler.integration;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.server.ServerErrorException;
 import pl.com.bottega.cymes.showscheduler.adapters.SuspensionCheckerAdapter;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ShowExample;
 
-import javax.inject.Inject;
-import javax.ws.rs.ServerErrorException;
 import java.util.Date;
 import java.util.Random;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@RunWith(Arquillian.class)
+@IntegrationTest
 public class SuspensionCheckerAdapterTest {
 
-    @Rule
-    public WireMockRule wireMock = new WireMockRule(options().port(8888).httpsPort(8889));
-
-    @Inject
+    @Autowired
     private SuspensionCheckerAdapter suspensionCheckerAdapter;
-
-    @Deployment
-    public static Archive<?> createTestArchive() {
-        return DeploymentFactory.createTestArchive();
-    }
 
     @Test
     public void returnsFalseWhenNeitherCinemaNotCinemaHallAreSuspended() {
@@ -109,7 +95,7 @@ public class SuspensionCheckerAdapterTest {
     }
 
     private void stubSuspensionCheck(Show show, boolean value, String url, Long id) {
-        wireMock.stubFor(get(urlPathEqualTo(url + id + "/suspensions"))
+        stubFor(get(urlPathEqualTo(url + id + "/suspensions"))
             .withQueryParam("from", new EqualToPattern(Date.from(show.getStart()).toString()))
             .withQueryParam("until", new EqualToPattern(Date.from(show.getEnd()).toString()))
             .willReturn(aResponse()
@@ -119,7 +105,7 @@ public class SuspensionCheckerAdapterTest {
     }
 
     private void stubSuspensionCheckError(Show show, String url, Long cinemaHallId) {
-        wireMock.stubFor(get(urlPathEqualTo(url + cinemaHallId + "/suspensions"))
+        stubFor(get(urlPathEqualTo(url + cinemaHallId + "/suspensions"))
             .willReturn(aResponse()
                 .withStatus(500)
             ));
