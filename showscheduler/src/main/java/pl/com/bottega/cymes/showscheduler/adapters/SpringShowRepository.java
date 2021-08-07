@@ -1,26 +1,27 @@
 package pl.com.bottega.cymes.showscheduler.adapters;
 
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ShowRepository;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Id;
-import javax.persistence.PersistenceContext;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.UUID;
 
-@Repository
+import static pl.com.bottega.cymes.showscheduler.adapters.ShowEntity.COLLIDING_SHOWS_PRESENT;
+
+@Component
+@RequiredArgsConstructor
 public class SpringShowRepository implements ShowRepository {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final SpringDataShowRepository springDataShowRepository;
 
     @Override
     @Transactional
@@ -46,9 +47,19 @@ interface SpringDataShowRepository extends JpaRepository<ShowEntity, UUID> {
 @Entity(name = "Show")
 @Table(name = "shows")
 @NoArgsConstructor
+@NamedQuery(
+        name = COLLIDING_SHOWS_PRESENT,
+        query = "SELECT (count(s) > 0) FROM Show s WHERE " +
+                "((:ns <= s.start AND :ne >= s.start AND :ne <= s.end) OR " +
+                "(:ns <= s.start AND :ne >= s.end)  OR" +
+                "(:ns >= s.start AND :ne <= s.end) OR " +
+                "(:ns >= s.start AND :ns <= s.end AND :ne >= s.end)) AND " +
+                "s.cinemaId = :cinemaId AND " +
+                "s.cinemaHallId = :cinemaHallId"
+)
 class ShowEntity {
 
-    static final String COUNT_COLLIDING_SHOWS = "ShowEntity.countCollidingShows";
+    static final String COLLIDING_SHOWS_PRESENT = "ShowEntity.countCollidingShows";
 
     @Id
     private UUID id;

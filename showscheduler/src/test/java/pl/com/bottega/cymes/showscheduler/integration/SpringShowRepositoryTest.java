@@ -10,11 +10,13 @@ import pl.com.bottega.cymes.showscheduler.domain.ShowRepository.ShowNotFoundExce
 import java.time.Instant;
 import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @IntegrationTest
 public class SpringShowRepositoryTest {
+
     @Autowired
     private SpringShowRepository springShowRepository;
 
@@ -22,9 +24,9 @@ public class SpringShowRepositoryTest {
     public void savesAndReadsShow() {
         // given
         var show = new ShowExample()
-            .withStart(Instant.parse("2010-01-01T20:00:00.00Z"))
-            .withEnd(Instant.parse("2010-01-01T22:30:00.00Z"))
-            .toShow();
+                .withStart(Instant.parse("2010-01-01T20:00:00.00Z"))
+                .withEnd(Instant.parse("2010-01-01T22:30:00.00Z"))
+                .toShow();
 
         // when
         springShowRepository.save(show);
@@ -60,10 +62,11 @@ public class SpringShowRepositoryTest {
     private Show show(String startHour, String endHour) {
         var start = String.format("2010-11-30T%s:00.00Z", startHour);
         var end = String.format("2010-11-30T%s:00.00Z", endHour);
-        System.out.println(start);
         return new ShowExample()
-            .withStart(Instant.parse(start))
-            .withEnd(Instant.parse(end))
-            .toShow();
+                .withStart(Instant.parse(start))
+                .withEnd(Instant.parse(end))
+                .withCinemaId(1L)
+                .withCinemaHallId(1L)
+                .toShow();
     }
 }
