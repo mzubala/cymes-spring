@@ -8,6 +8,7 @@ import pl.com.bottega.cymes.showscheduler.domain.ShowExample;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.IntStream;
@@ -64,11 +65,17 @@ public class SpringOperationLockerTest {
         // given
         var threadsCount = 10;
         var executorService = Executors.newFixedThreadPool(threadsCount);
+        var showExample = new ShowExample()
+                .withStart(Instant.now().plusSeconds(120))
+                .withEnd(Instant.now().plusSeconds(1000000));
         Runnable operation = () -> {
-            var show = new ShowExample().withStart(Instant.now().plusMillis(10)).withEnd(Instant.now().plusMillis(1000000)).toShow();
+            var show = showExample.withId(UUID.randomUUID()).toShow();
+            locker.lock(show.getCinemaId().toString(), show.getCinemaHallId().toString(), () -> {
             if (!springShowRepository.anyShowsCollidingWith(show)) {
                 springShowRepository.save(show);
             }
+                return null;
+            });
         };
 
         // when

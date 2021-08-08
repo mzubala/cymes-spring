@@ -16,8 +16,8 @@ public class ShowExample {
     private Long movieId = new Random().nextLong();
     private Long cinemaId = new Random().nextLong();
     private Long cinemaHallId = new Random().nextLong();
-    private Instant start = Instant.now().plusMillis(Math.abs(new Random().nextLong()));
-    private Instant end = start.plusMillis(Math.abs(new Random().nextLong()));
+    private Instant start = Instant.now().plusMillis(Math.abs(new Random().nextInt()));
+    private Instant end = start.plusMillis(Math.abs(new Random().nextInt()));
 
     public Show toShow() {
         return new Show(id, movieId, cinemaId, cinemaHallId, start, end);
