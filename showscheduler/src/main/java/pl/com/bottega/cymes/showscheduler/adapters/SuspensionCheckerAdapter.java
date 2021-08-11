@@ -2,6 +2,8 @@ package pl.com.bottega.cymes.showscheduler.adapters;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,11 +17,13 @@ import reactor.core.publisher.Mono;
 public class SuspensionCheckerAdapter implements SuspensionChecker {
 
     private final WebClient cinemasClient;
+    private final ReactiveCircuitBreakerFactory circuitBreakerFactory;
 
     @Override
     public boolean anySuspensionsAtTimeOf(Show show) {
         return getSuspension(show, "cinemas", show.getCinemaId())
                 .zipWith(getSuspension(show, "halls", show.getCinemaHallId()))
+                .transform(it -> circuitBreakerFactory.create("cinemas-circuit-breaker").run(it))
                 .map(responses -> responses.getT1().isSuspended() || responses.getT2().isSuspended())
                 .block();
     }
