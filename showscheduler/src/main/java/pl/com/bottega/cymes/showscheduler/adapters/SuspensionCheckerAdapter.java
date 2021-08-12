@@ -23,8 +23,9 @@ public class SuspensionCheckerAdapter implements SuspensionChecker {
     public boolean anySuspensionsAtTimeOf(Show show) {
         return getSuspension(show, "cinemas", show.getCinemaId())
                 .zipWith(getSuspension(show, "halls", show.getCinemaHallId()))
-                .transform(it -> circuitBreakerFactory.create("cinemas-circuit-breaker").run(it))
+                //.transform(it -> circuitBreakerFactory.create("cinemas-circuit-breaker").run(it))
                 .map(responses -> responses.getT1().isSuspended() || responses.getT2().isSuspended())
+                .onErrorResume((ex) -> Mono.error(new ServerErrorException("Failed to get suspension", ex)))
                 .block();
     }
 

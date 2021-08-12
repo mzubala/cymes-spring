@@ -1,21 +1,17 @@
 package pl.com.bottega.cymes.showscheduler.integration;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import org.springframework.stereotype.Component;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 
-import java.util.Date;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
+@Component
 class CinemaAbility {
-    private final WireMockRule wireMock;
-
-    CinemaAbility(WireMockRule wireMock) {
-        this.wireMock = wireMock;
-    }
 
     void cinemaHallSuspensionCheckReturns(Show show, boolean value) {
         stubSuspensionCheck(show, value, "/halls/", show.getCinemaHallId());
@@ -33,40 +29,40 @@ class CinemaAbility {
         stubSuspensionCheck(cinemaId, value, "/cinemas/");
     }
 
-    void cinemaSuspensionCheckReturnsError(Show show) {
-        stubSuspensionCheckError("/cinemas/", show.getCinemaId());
+    void cinemaHallSuspensionCheckReturnsError(Show show) {
+        stubSuspensionCheckError(show, "/halls/", show.getCinemaHallId());
     }
 
-    void cinemaHallSuspensionCheckReturnsError(Show show) {
-        stubSuspensionCheckError("/halls/", show.getCinemaHallId());
+    void cinemaSuspensionCheckReturnsError(Show show) {
+        stubSuspensionCheckError(show, "/cinemas/", show.getCinemaId());
+    }
+
+    private void stubSuspensionCheck(Long id, boolean value, String url) {
+        stubFor(get(urlPathEqualTo(url + id + "/suspensions"))
+                .willReturn(aResponse()
+                        .withBody(suspendedBody(value))
+                        .withHeader("Content-type", "application/json")
+                ));
+    }
+
+    private void stubSuspensionCheck(Show show, boolean value, String url, Long id) {
+        stubFor(get(urlPathEqualTo(url + id + "/suspensions"))
+                .withQueryParam("from", equalTo(show.getStart().toString()))
+                .withQueryParam("until", equalTo(show.getEnd().toString()))
+                .willReturn(aResponse()
+                        .withBody(suspendedBody(value))
+                        .withHeader("Content-type", "application/json")
+                ));
+    }
+
+    private void stubSuspensionCheckError(Show show, String url, Long cinemaHallId) {
+        stubFor(get(urlPathMatching(url + cinemaHallId + "/suspensions"))
+                .willReturn(aResponse()
+                        .withStatus(500)
+                ));
     }
 
     private String suspendedBody(boolean value) {
         return "{\"suspended\": " + value + "}";
-    }
-
-    private void stubSuspensionCheck(Long id, boolean value, String url) {
-        wireMock.stubFor(get(urlPathEqualTo(url + id + "/suspensions"))
-            .willReturn(aResponse()
-                .withBody(suspendedBody(value))
-                .withHeader("Content-type", "application/json")
-            ));
-    }
-
-    private void stubSuspensionCheck(Show show, boolean value, String url, Long id) {
-        wireMock.stubFor(get(urlPathEqualTo(url + id + "/suspensions"))
-            .withQueryParam("from", new EqualToPattern(Date.from(show.getStart()).toString()))
-            .withQueryParam("until", new EqualToPattern(Date.from(show.getEnd()).toString()))
-            .willReturn(aResponse()
-                .withBody(suspendedBody(value))
-                .withHeader("Content-type", "application/json")
-            ));
-    }
-
-    private void stubSuspensionCheckError(String url, Long cinemaHallId) {
-        wireMock.stubFor(get(urlPathEqualTo(url + cinemaHallId + "/suspensions"))
-            .willReturn(aResponse()
-                .withStatus(500)
-            ));
     }
 }

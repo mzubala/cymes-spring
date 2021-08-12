@@ -19,14 +19,16 @@ public class ShowSchedulerResource {
 
     private final ScheduleShowHandler handler;
 
+    private final UserProvider userProvider;
+
     @PostMapping
     public void scheduleShow(ScheduleShowRequest request) {
-        var command = request.toCommand();
+        var command= request.toCommand(userProvider.currentUserId());
         handler.handle(command);
     }
 
     @Data
-    static class ScheduleShowRequest {
+    public static class ScheduleShowRequest {
         @NonNull
         private final String showId;
         @NonNull
@@ -38,7 +40,7 @@ public class ShowSchedulerResource {
         @NonNull
         private final Instant when;
 
-        ScheduleShowCommand toCommand() {
+        ScheduleShowCommand toCommand(Long userId) {
             return ScheduleShowCommand.builder()
                     .cinemaHallId(cinemaHallId)
                     .cinemaId(cinemaId)
@@ -46,6 +48,7 @@ public class ShowSchedulerResource {
                     .userId(1L)
                     .showId(UUID.fromString(showId))
                     .when(when)
+                    .userId(userId)
                     .build();
         }
     }

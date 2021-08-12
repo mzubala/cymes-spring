@@ -30,7 +30,8 @@ public class MovieCatalogAdapterTest {
     @Autowired
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private MovieAbility movieAbility;
 
     @BeforeEach
     public void resetCircuitBreaker() {
@@ -41,7 +42,7 @@ public class MovieCatalogAdapterTest {
     public void returnsMovie() {
         // given
         var movie = new Movie(1L, 120);
-        stubMovie(movie);
+        movieAbility.stubMovie(movie);
 
         // when
         var fetchedMovie = movieCatalogAdapter.get(movie.getId());
@@ -53,7 +54,7 @@ public class MovieCatalogAdapterTest {
     @Test
     public void usesACircuitBreaker() {
         // given
-        stubMoviesServiceFailure();
+        movieAbility.stubMoviesServiceFailure();
         int n = 200;
 
         // when
@@ -68,21 +69,5 @@ public class MovieCatalogAdapterTest {
         // then
         verify(moreThan(0), getRequestedFor(urlPathMatching("/movies/(.*)")));
         verify(lessThan(n), getRequestedFor(urlPathMatching("/movies/(.*)")));
-    }
-
-    @SneakyThrows
-    private void stubMovie(Movie movie) {
-        stubFor(get(urlPathEqualTo("/movies/" + movie.getId()))
-            .willReturn(aResponse()
-                .withBody(objectMapper.writeValueAsString(movie))
-                .withHeader("Content-type", "application/json")
-            ));
-    }
-
-    private void stubMoviesServiceFailure() {
-        stubFor(get(urlPathMatching("/movies/(.*)"))
-                .willReturn(aResponse()
-                        .withStatus(500)
-                ));
     }
 }
