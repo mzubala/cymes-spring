@@ -25,6 +25,7 @@ public class SuspensionCheckerAdapter implements SuspensionChecker {
                 .zipWith(getSuspension(show, "halls", show.getCinemaHallId()))
                 .transform(it -> circuitBreakerFactory.create("cinemas-circuit-breaker").run(it))
                 .map(responses -> responses.getT1().isSuspended() || responses.getT2().isSuspended())
+                .onErrorResume(ex -> Mono.error(new ServerErrorException("Failed to get suspension", ex)))
                 .block();
     }
 
@@ -39,15 +40,7 @@ public class SuspensionCheckerAdapter implements SuspensionChecker {
                                 .build(id)
 
                 )
-                .exchangeToMono(this::toSuspensionResponse);
-    }
-
-    private Mono<SuspensionResponse> toSuspensionResponse(ClientResponse response) {
-        if(response.statusCode().is2xxSuccessful()) {
-            return response.bodyToMono(SuspensionResponse.class);
-        } else {
-            return Mono.error(new ServerErrorException("Failed to get suspension", new IllegalStateException()));
-        }
+                .retrieve().bodyToMono(SuspensionResponse.class);
     }
 }
 

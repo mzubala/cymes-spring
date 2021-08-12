@@ -8,3 +8,8 @@ clients:
   movies:
     url: http://localhost:9898
     readTimeout: 1000
+
+resilience4j.timelimiter:
+  configs:
+    default:
+      timeoutDuration: 3s
