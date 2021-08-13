@@ -3,8 +3,7 @@ package pl.com.bottega.cymes.showscheduler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import pl.com.bottega.cymes.showscheduler.adapters.SpringShowSchedulerConfiguration;
+import pl.com.bottega.cymes.showscheduler.adapters.configuration.SpringShowSchedulerConfiguration;
 
 @SpringBootApplication
 @EnableConfigurationProperties({SpringShowSchedulerConfiguration.class})

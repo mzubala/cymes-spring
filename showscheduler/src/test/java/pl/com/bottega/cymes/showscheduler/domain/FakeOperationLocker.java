@@ -1,5 +1,7 @@
 package pl.com.bottega.cymes.showscheduler.domain;
 
+import pl.com.bottega.cymes.showscheduler.domain.ports.OperationLocker;
+
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;

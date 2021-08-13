@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.clients;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFac
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import pl.com.bottega.cymes.showscheduler.domain.Movie;
-import pl.com.bottega.cymes.showscheduler.domain.MovieCatalog;
+import pl.com.bottega.cymes.showscheduler.domain.ports.MovieCatalog;
 
 @Component
 @RequiredArgsConstructor

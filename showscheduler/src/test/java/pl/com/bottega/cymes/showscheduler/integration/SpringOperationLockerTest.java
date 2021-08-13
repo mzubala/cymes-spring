@@ -2,8 +2,8 @@ package pl.com.bottega.cymes.showscheduler.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.bottega.cymes.showscheduler.adapters.SpringOperationLocker;
-import pl.com.bottega.cymes.showscheduler.adapters.SpringShowRepository;
+import pl.com.bottega.cymes.showscheduler.adapters.db.SpringOperationLocker;
+import pl.com.bottega.cymes.showscheduler.adapters.db.SpringShowRepository;
 import pl.com.bottega.cymes.showscheduler.domain.ShowExample;
 
 import java.time.Instant;

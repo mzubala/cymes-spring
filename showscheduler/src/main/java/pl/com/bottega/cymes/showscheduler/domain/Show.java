@@ -1,5 +1,7 @@
 package pl.com.bottega.cymes.showscheduler.domain;
 
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowSchedulerConfiguration;
+
 import java.time.Instant;
 import java.util.UUID;
 

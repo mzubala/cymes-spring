@@ -1,10 +1,10 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.db;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.com.bottega.cymes.showscheduler.domain.OperationLocker;
+import pl.com.bottega.cymes.showscheduler.domain.ports.OperationLocker;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;

@@ -1,8 +1,8 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.configuration;
 
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import pl.com.bottega.cymes.showscheduler.domain.ShowSchedulerConfiguration;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowSchedulerConfiguration;
 
 import java.time.Duration;
 

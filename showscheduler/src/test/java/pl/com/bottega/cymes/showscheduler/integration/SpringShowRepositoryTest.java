@@ -2,10 +2,10 @@ package pl.com.bottega.cymes.showscheduler.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.bottega.cymes.showscheduler.adapters.SpringShowRepository;
+import pl.com.bottega.cymes.showscheduler.adapters.db.SpringShowRepository;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ShowExample;
-import pl.com.bottega.cymes.showscheduler.domain.ShowRepository.ShowNotFoundException;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowRepository.ShowNotFoundException;
 
 import java.time.Instant;
 import java.util.UUID;

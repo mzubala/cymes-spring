@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.showscheduler.domain;
+package pl.com.bottega.cymes.showscheduler.domain.ports;
 
 import java.util.function.Supplier;
 

@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.security;
 
 import org.springframework.stereotype.Component;
 

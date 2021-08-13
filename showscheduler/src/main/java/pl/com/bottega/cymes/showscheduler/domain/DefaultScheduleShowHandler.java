@@ -2,6 +2,12 @@ package pl.com.bottega.cymes.showscheduler.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import pl.com.bottega.cymes.showscheduler.domain.ports.MovieCatalog;
+import pl.com.bottega.cymes.showscheduler.domain.ports.OperationLocker;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ScheduleShowHandler;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowRepository;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowSchedulerConfiguration;
+import pl.com.bottega.cymes.showscheduler.domain.ports.SuspensionChecker;
 
 @AllArgsConstructor
 public class DefaultScheduleShowHandler implements ScheduleShowHandler {

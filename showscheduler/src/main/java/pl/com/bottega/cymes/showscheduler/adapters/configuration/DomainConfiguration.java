@@ -1,14 +1,14 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.com.bottega.cymes.showscheduler.domain.DefaultScheduleShowHandler;
-import pl.com.bottega.cymes.showscheduler.domain.MovieCatalog;
-import pl.com.bottega.cymes.showscheduler.domain.OperationLocker;
-import pl.com.bottega.cymes.showscheduler.domain.ScheduleShowHandler;
-import pl.com.bottega.cymes.showscheduler.domain.ShowRepository;
-import pl.com.bottega.cymes.showscheduler.domain.ShowSchedulerConfiguration;
-import pl.com.bottega.cymes.showscheduler.domain.SuspensionChecker;
+import pl.com.bottega.cymes.showscheduler.domain.ports.MovieCatalog;
+import pl.com.bottega.cymes.showscheduler.domain.ports.OperationLocker;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ScheduleShowHandler;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowRepository;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowSchedulerConfiguration;
+import pl.com.bottega.cymes.showscheduler.domain.ports.SuspensionChecker;
 
 @Configuration
 public class DomainConfiguration {

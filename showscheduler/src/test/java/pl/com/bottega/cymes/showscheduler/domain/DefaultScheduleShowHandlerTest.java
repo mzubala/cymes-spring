@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.com.bottega.cymes.showscheduler.domain.ports.MovieCatalog;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowRepository;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowSchedulerConfiguration;
+import pl.com.bottega.cymes.showscheduler.domain.ports.SuspensionChecker;
 
 import java.time.Duration;
 

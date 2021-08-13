@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.configuration;
 
 import io.netty.channel.ChannelOption;
 import lombok.Data;

@@ -1,13 +1,12 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.db;
 
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
-import pl.com.bottega.cymes.showscheduler.domain.ShowRepository;
+import pl.com.bottega.cymes.showscheduler.domain.ports.ShowRepository;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,7 +16,7 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.UUID;
 
-import static pl.com.bottega.cymes.showscheduler.adapters.ShowEntity.COLLIDING_SHOWS_PRESENT;
+import static pl.com.bottega.cymes.showscheduler.adapters.db.ShowEntity.COLLIDING_SHOWS_PRESENT;
 
 @Component
 @RequiredArgsConstructor

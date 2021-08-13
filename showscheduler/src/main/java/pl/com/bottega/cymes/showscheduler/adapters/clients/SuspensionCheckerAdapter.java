@@ -1,15 +1,13 @@
-package pl.com.bottega.cymes.showscheduler.adapters;
+package pl.com.bottega.cymes.showscheduler.adapters.clients;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerErrorException;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
-import pl.com.bottega.cymes.showscheduler.domain.SuspensionChecker;
+import pl.com.bottega.cymes.showscheduler.domain.ports.SuspensionChecker;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
