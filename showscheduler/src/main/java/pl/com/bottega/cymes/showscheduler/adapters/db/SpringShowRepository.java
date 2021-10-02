@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ports.ShowRepository;
 
@@ -12,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.transaction.Transactional;
+import javax.persistence.Version;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -80,6 +81,8 @@ class ShowEntity {
     private Long cinemaHallId;
     private Instant start;
     private Instant end;
+    @Version
+    private Long version;
 
     ShowEntity(Show show) {
         this.id = show.getId();
