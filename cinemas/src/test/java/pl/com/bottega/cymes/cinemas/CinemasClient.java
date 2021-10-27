@@ -37,4 +37,11 @@ public class CinemasClient {
                 .host("localhost")
                 .port(applicationContext.getEnvironment().getProperty("local.server.port"));
     }
+
+    public ResponseSpec getCinemaHall(Long id) {
+        return webTestClient
+                .get()
+                .uri(withHostAndPort().andThen((uriBuilder) -> uriBuilder.path("/halls/{hallId}").build(id)))
+                .exchange();
+    }
 }
