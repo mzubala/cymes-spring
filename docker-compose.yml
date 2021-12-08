@@ -6,7 +6,7 @@ services:
     depends_on:
       - db
   movies:
-    build: ./cinemas
+    build: ./movies
     ports:
       - "8088:8088"
     depends_on:

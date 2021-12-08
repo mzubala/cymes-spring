@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +34,7 @@ public class MoviesResource {
     // 6. Search movies
 
     @PostMapping
-    public void createMovie(@RequestBody CreateMovieRequest request) {
+    public void createMovie(@Valid @RequestBody CreateMovieRequest request) {
 
     }
 
@@ -67,10 +73,21 @@ class SearchParams {
 
 @Data
 class CreateMovieRequest {
+    @NotBlank
     private String title;
+
+    @NotNull
     private Long directorId;
+
+    @NotEmpty
     private Set<Long> actorIds;
+
+    @NotEmpty
     private Set<Long> genreIds;
+
+    @NotNull
+    @Min(30)
+    @Max(24*60)
     private Integer durationMinutes;
 }
 
