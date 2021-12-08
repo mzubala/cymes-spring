@@ -23,6 +23,7 @@
         <module>reservations</module>
         <module>notifications</module>
         <module>ticketsgeneration</module>
+        <module>sandbox</module>
     </modules>
 
     <properties>
