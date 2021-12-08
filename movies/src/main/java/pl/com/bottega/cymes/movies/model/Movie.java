@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.dataaccess.model;
+package pl.com.bottega.cymes.movies.model;
 
 import lombok.Data;
 

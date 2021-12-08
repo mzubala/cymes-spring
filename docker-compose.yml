@@ -5,6 +5,12 @@ services:
       - "8080:8080"
     depends_on:
       - db
+  movies:
+    build: ./cinemas
+    ports:
+      - "8088:8088"
+    depends_on:
+      - db
   db:
     image: postgres
     ports:
