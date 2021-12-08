@@ -42,7 +42,7 @@ public class MapSerializerTest {
         var serialized = serializer.serialize(object);
 
         // then
-        assertThat(serialized.keySet()).containsExactly("foo");
+        assertThat(serialized.keySet()).containsExactlyInAnyOrder("foo");
         assertThat(serialized).containsEntry("foo", 10L);
     }
 
@@ -55,7 +55,7 @@ public class MapSerializerTest {
         var serialized = serializer.serialize(object);
 
         // then
-        assertThat(serialized.keySet()).containsExactly("foo");
+        assertThat(serialized.keySet()).containsExactlyInAnyOrder("foo");
         assertThat(serialized).containsEntry("foo", "bar");
     }
 
@@ -72,7 +72,7 @@ public class MapSerializerTest {
         var serialized = serializer.serialize(object);
 
         // then
-        assertThat(serialized.keySet()).containsExactly("x", "y", "z");
+        assertThat(serialized.keySet()).containsExactlyInAnyOrder("x", "y", "z");
         assertThat(serialized).containsEntry("x", "1").containsEntry("y", "2").containsEntry("z", 20.0);
     }
 
@@ -88,7 +88,7 @@ public class MapSerializerTest {
         var serialized = serializer.serialize(object);
 
         // then
-        assertThat(serialized.keySet()).containsExactly("x", "b");
+        assertThat(serialized.keySet()).containsExactlyInAnyOrder("x", "b");
         assertThat(serialized).containsEntry("x", 1L).containsEntry("b", false);
     }
 
@@ -116,7 +116,7 @@ public class MapSerializerTest {
         var serialized = serializer.serialize(object);
 
         // then
-        assertThat(serialized.keySet()).containsExactly("x", "b", "y", "z");
+        assertThat(serialized.keySet()).containsExactlyInAnyOrder("x", "b", "y", "z");
         assertThat(serialized).containsEntry("x", 1L)
             .containsEntry("b", false)
             .containsEntry("y", 2L)
