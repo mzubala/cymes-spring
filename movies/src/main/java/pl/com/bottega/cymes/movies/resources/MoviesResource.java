@@ -2,6 +2,7 @@ package pl.com.bottega.cymes.movies.resources;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,15 +33,26 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/movies")
-@RequiredArgsConstructor
+@Log
 public class MoviesResource {
 
     private final MovieService movieService;
     private final MovieFinder movieFinder;
 
+    public MoviesResource(MovieService movieService, MovieFinder movieFinder) {
+        this.movieService = movieService;
+        this.movieFinder = movieFinder;
+        log.info("Movie service class = " + movieService.getClass().toString());
+    }
+
     @PostMapping
     public void createMovie(@Valid @RequestBody CreateMovieRequest request) {
         movieService.create(request.toCommand());
+    }
+
+    @PostMapping("/sample")
+    public void createSampleMovie() {
+        movieService.createSampleMovie();
     }
 
     @PutMapping(path = "/{id}")

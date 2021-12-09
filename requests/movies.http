@@ -8,3 +8,6 @@ Content-Type: application/json
   "actorIds": [1, 2],
   "genreIds": [3, 4]
 }
+###
+
+POST http://localhost:8088/movies/sample
