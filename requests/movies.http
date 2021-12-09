@@ -2,5 +2,9 @@ POST http://localhost:8088/movies
 Content-Type: application/json
 
 {
-  "title": "Xyz"
+  "title": "Xyz",
+  "durationMinutes": 120,
+  "directorId": 1,
+  "actorIds": [1, 2],
+  "genreIds": [3, 4]
 }
