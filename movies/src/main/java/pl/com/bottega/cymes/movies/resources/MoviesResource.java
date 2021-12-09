@@ -1,7 +1,7 @@
 package pl.com.bottega.cymes.movies.resources;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +10,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.com.bottega.cymes.movies.services.ArchiveMovieCommand;
+import pl.com.bottega.cymes.movies.services.CreateMovieCommand;
+import pl.com.bottega.cymes.movies.services.MovieFinder;
+import pl.com.bottega.cymes.movies.services.MovieFinder.MovieAttribute;
+import pl.com.bottega.cymes.movies.services.MovieFinder.MovieDetails;
+import pl.com.bottega.cymes.movies.services.MovieFinder.SearchParams;
+import pl.com.bottega.cymes.movies.services.MovieService;
+import pl.com.bottega.cymes.movies.services.PublishMovieCommand;
+import pl.com.bottega.cymes.movies.services.UpdateMovieCommand;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -17,58 +26,47 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-
 @RestController
 @RequestMapping("/movies")
+@RequiredArgsConstructor
 public class MoviesResource {
 
-    // 1. Create movie
-    // 2. Update movie
-    // 3. Publish movie
-    // 4. Archive movie
-    // 5. Get by id
-    // 6. Search movies
+    private final MovieService movieService;
+    private final MovieFinder movieFinder;
 
     @PostMapping
     public void createMovie(@Valid @RequestBody CreateMovieRequest request) {
-
+        movieService.create(request.toCommand());
     }
 
     @PutMapping(path = "/{id}")
     public void updateMovie(@PathVariable Long id, @RequestBody UpdateMovieRequest request) {
-
+        movieService.update(request.toCommand(id));
     }
 
     @PutMapping(path = "/{id}/publish")
     public void publishMovie(@PathVariable Long id) {
-
+        movieService.publish(new PublishMovieCommand(id));
     }
 
     @PutMapping(path = "/{id}/archive")
     public void archiveMovie(@PathVariable Long id) {
-
+        movieService.archive(new ArchiveMovieCommand(id));
     }
 
     @GetMapping(path = "/{id}")
     public MovieDetails getMovie(@PathVariable Long id, @RequestParam List<MovieAttribute> attributes) {
-        return null;
+        return movieFinder.findById(id, new HashSet<>(attributes));
     }
 
     @GetMapping
     public List<MovieDetails> search(SearchParams params) {
-        return null;
+        return movieFinder.search(params);
     }
-}
-
-@Data
-class SearchParams {
-    private String phrase;
-    private Long genreId;
-    private List<MovieAttribute> attributes;
 }
 
 @Data
@@ -89,6 +87,10 @@ class CreateMovieRequest {
     @Min(30)
     @Max(24*60)
     private Integer durationMinutes;
+
+    public CreateMovieCommand toCommand() {
+        return new CreateMovieCommand(title, directorId, actorIds, genreIds, durationMinutes);
+    }
 }
 
 @Data
@@ -98,37 +100,8 @@ class UpdateMovieRequest {
     private Set<Long> actorIds;
     private Set<Long> genreIds;
     private Integer durationMinutes;
-}
 
-@Data
-@JsonInclude(NON_NULL)
-class MovieDetails {
-    private Long id;
-    private String title;
-    private DirectorDetails directorId;
-    private Set<ActorDetails> actorIds;
-    private Set<GenreDetails> genreIds;
-    private Integer durationMinutes;
-}
-
-@Data
-class DirectorDetails {
-    private Long id;
-    private String name;
-}
-
-@Data
-class ActorDetails {
-    private Long id;
-    private String name;
-}
-
-@Data
-class GenreDetails {
-    private Long id;
-    private String name;
-}
-
-enum MovieAttribute {
-    TITLE, DIRECTOR, ACTORS, GENRES, DURATION
+    public UpdateMovieCommand toCommand(Long id) {
+        return new UpdateMovieCommand(id, title, directorId, actorIds, genreIds, durationMinutes);
+    }
 }
