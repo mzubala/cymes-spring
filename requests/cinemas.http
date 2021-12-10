@@ -9,8 +9,8 @@ POST http://localhost:8080/cinemas
 Content-Type: application/json
 
 {
-  "name": "Magnolia",
-  "city": "Wrocław"
+  "name": "Plaza",
+  "city": "Lublin"
 }
 
 ###

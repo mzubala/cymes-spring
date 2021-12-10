@@ -1,5 +1,6 @@
 package pl.com.bottega.cymes.cinemas;
 
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log
 public class PostgresDBExtension implements BeforeAllCallback, BeforeEachCallback, ExtensionContext.Store.CloseableResource {
     private final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:13"));
 
@@ -48,6 +50,8 @@ public class PostgresDBExtension implements BeforeAllCallback, BeforeEachCallbac
 
     private void startPostgresDB() {
         if (!postgreSQLContainer.isRunning()) {
+            postgreSQLContainer.setWorkingDirectory(System.getProperty("user.dir") + "/testdb");
+            log.info(System.getProperty("user.dir") + "/testdb");
             postgreSQLContainer.withUsername("app");
             postgreSQLContainer.withPassword("app");
             postgreSQLContainer.withDatabaseName("cinemas");

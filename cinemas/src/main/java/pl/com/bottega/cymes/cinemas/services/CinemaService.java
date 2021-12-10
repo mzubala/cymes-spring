@@ -1,6 +1,9 @@
 package pl.com.bottega.cymes.cinemas.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaDao;
@@ -29,12 +32,17 @@ public class CinemaService {
 
     private final SuspensionDao suspensionDao;
 
+    private final ApplicationEventPublisher publisher;
+
     @Transactional
     public void create(CreateCinemaCommand cmd) {
         var cinema = new Cinema();
         cinema.setName(cmd.getName());
         cinema.setCity(cmd.getCity());
         cinemaDao.save(cinema);
+        publisher.publishEvent("hello");
+        publisher.publishEvent(120L);
+        publisher.publishEvent(new CinemaCreatedEvent(cinema.getId()));
     }
 
     @Transactional
@@ -77,5 +85,10 @@ public class CinemaService {
     @Transactional(readOnly = true)
     public Boolean isSuspended(Long cinemaId, Instant at) {
         return suspensionDao.isCinemaSuspended(cinemaId, at);
+    }
+
+    @Value
+    static class CinemaCreatedEvent {
+        Long cinemaId;
     }
 }
