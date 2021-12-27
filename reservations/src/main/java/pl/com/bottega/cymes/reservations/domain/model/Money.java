@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.reservations.domain.model.model.model;
+package pl.com.bottega.cymes.reservations.domain.model;
 
 import lombok.Value;
 
@@ -26,5 +26,13 @@ public class Money {
 
     public static Money zero() {
         return ZERO;
+    }
+
+    public Money times(int multiplier) {
+        return new Money(amount.multiply(new BigDecimal(multiplier)));
+    }
+
+    public Money add(Money other) {
+        return new Money(amount.add(other.amount));
     }
 }

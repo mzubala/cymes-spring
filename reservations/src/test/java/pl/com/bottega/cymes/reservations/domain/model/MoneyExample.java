@@ -1,6 +1,6 @@
-package pl.com.bottega.cymes.reservations.domain.model.model;
+package pl.com.bottega.cymes.reservations.domain.model;
 
-import pl.com.bottega.cymes.reservations.domain.model.model.model.Money;
+import pl.com.bottega.cymes.reservations.domain.model.Money;
 
 import java.math.BigDecimal;
 

@@ -1,7 +1,7 @@
-package pl.com.bottega.cymes.reservations.domain.model.model.application;
+package pl.com.bottega.cymes.reservations.domain.ports;
 
 import lombok.AllArgsConstructor;
-import pl.com.bottega.cymes.reservations.domain.model.model.model.Reservation;
+import pl.com.bottega.cymes.reservations.domain.model.Reservation;
 
 @AllArgsConstructor
 public class SelectShowHandler {

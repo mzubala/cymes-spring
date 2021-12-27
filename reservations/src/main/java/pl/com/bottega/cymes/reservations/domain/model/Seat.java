@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.reservations.domain.model.model.model;
+package pl.com.bottega.cymes.reservations.domain.model;
 
 import lombok.Value;
 

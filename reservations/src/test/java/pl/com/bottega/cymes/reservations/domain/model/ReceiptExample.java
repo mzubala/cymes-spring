@@ -1,8 +1,4 @@
-package pl.com.bottega.cymes.reservations.domain.model.model;
-
-import pl.com.bottega.cymes.reservations.domain.model.model.model.Money;
-import pl.com.bottega.cymes.reservations.domain.model.model.model.Receipt;
-import pl.com.bottega.cymes.reservations.domain.model.model.model.TicketKind;
+package pl.com.bottega.cymes.reservations.domain.model;
 
 public class ReceiptExample {
 

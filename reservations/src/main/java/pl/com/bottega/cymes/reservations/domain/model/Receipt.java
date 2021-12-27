@@ -1,10 +1,11 @@
-package pl.com.bottega.cymes.reservations.domain.model.model.model;
+package pl.com.bottega.cymes.reservations.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Value
 @AllArgsConstructor
@@ -18,8 +19,12 @@ public class Receipt {
 
     public Receipt withItem(TicketKind ticketKind, int count, Money price) {
         List<ReceiptItem> newItems = new LinkedList<>(items);
-        items.add(new ReceiptItem(ticketKind, count, price));
+        newItems.add(new ReceiptItem(ticketKind, count, price));
         return new Receipt(newItems);
+    }
+
+    public Money getTotal() {
+        return items.stream().map(ReceiptItem::getItemTotal).reduce(Money.zero(), Money::add);
     }
 
     @Value
@@ -27,5 +32,9 @@ public class Receipt {
         TicketKind ticketKind;
         int count;
         Money price;
+
+        Money getItemTotal() {
+            return price.times(count);
+        }
     }
 }
