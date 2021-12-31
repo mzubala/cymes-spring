@@ -5,10 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.PersistentCommandDao;
+import pl.com.bottega.cymes.cinemas.events.CinemaSuspendedEvent;
 import pl.com.bottega.cymes.cinemas.resources.request.CreateCinemaRequest;
+import pl.com.bottega.cymes.cinemas.resources.request.SuspendRequest;
 import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaInfoDto;
 
+import java.time.Instant;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.OK;
 
 @IntegrationTest
 public class CinemasResourceTest {
@@ -23,6 +29,9 @@ public class CinemasResourceTest {
 
     @Autowired
     private TransactionTemplate transactionTemplate;
+
+    @Autowired
+    private PublishedEventsAssertions publishedEventsAssertions;
 
     @Test
     public void createsAndReturnsCinemas() {
@@ -91,5 +100,28 @@ public class CinemasResourceTest {
         // then
         firstResponse.expectStatus().isOk();
         secondResponse.expectStatus().isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    public void publishesEventWhenCinemaIsSuspended() {
+        // given
+        var request = new CreateCinemaRequest();
+        request.setCity("Warszawa");
+        request.setName("Arkadia");
+        cinemasClient.createCinema(request);
+        var cinema = cinemasClient.getCinemas().expectBodyList(BasicCinemaInfoDto.class)
+            .returnResult().getResponseBody().get(0);
+
+        // when
+        var suspendRequest = new SuspendRequest();
+        suspendRequest.setFrom(Instant.now().plus(1, DAYS));
+        suspendRequest.setUntil(Instant.now().plus(2, DAYS));
+        var suspendResp = cinemasClient.suspendCinema(cinema.getId(), suspendRequest);
+
+        // then
+        suspendResp.expectStatus().isEqualTo(OK);
+        publishedEventsAssertions.awaitEventPublished(
+            new CinemaSuspendedEvent(cinema.getId(), suspendRequest.getFrom(), suspendRequest.getUntil())
+        );
     }
 }

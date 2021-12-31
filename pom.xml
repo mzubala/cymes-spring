@@ -18,6 +18,7 @@
 
     <modules>
         <module>cinemas</module>
+        <module>cinemas-events</module>
         <module>movies</module>
         <module>showscheduler</module>
         <module>reservations</module>

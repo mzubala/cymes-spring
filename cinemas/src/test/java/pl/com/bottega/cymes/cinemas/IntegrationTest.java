@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(PostgresDBExtension.class)
+@ExtendWith({PostgresDBExtension.class, KafkaExtension.class})
 @SpringBootTest(
         classes = {CinemasApp.class, TestConfig.class},
         properties = {"application.environment=integration"},

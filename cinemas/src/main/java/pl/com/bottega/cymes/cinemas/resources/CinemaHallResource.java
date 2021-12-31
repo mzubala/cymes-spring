@@ -16,6 +16,7 @@ import pl.com.bottega.cymes.cinemas.services.CinemaHallService;
 import pl.com.bottega.cymes.cinemas.services.commands.CreateCinemaHallCommand;
 import pl.com.bottega.cymes.cinemas.services.commands.SuspendCommand;
 import pl.com.bottega.cymes.cinemas.services.commands.UpdateCinemaHallCommand;
+import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaHallInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaHallInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionCheckDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;

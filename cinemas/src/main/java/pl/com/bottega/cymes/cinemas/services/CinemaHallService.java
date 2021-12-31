@@ -1,6 +1,7 @@
 package pl.com.bottega.cymes.cinemas.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaDao;
@@ -10,6 +11,7 @@ import pl.com.bottega.cymes.cinemas.dataaccess.model.CinemaHall;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Row;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.RowElement;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Suspension;
+import pl.com.bottega.cymes.cinemas.events.CinemaHallSuspendedEvent;
 import pl.com.bottega.cymes.cinemas.services.audit.Audit;
 import pl.com.bottega.cymes.cinemas.services.commands.CreateCinemaHallCommand;
 import pl.com.bottega.cymes.cinemas.services.commands.SuspendCommand;
@@ -35,6 +37,8 @@ public class CinemaHallService {
 
     private final SuspensionDao suspensionDao;
 
+    private final ApplicationEventPublisher publisher;
+
     @Transactional
     public void create(CreateCinemaHallCommand cmd) {
         var cinema = cinemaDao.getReference(cmd.getCinemaId());
@@ -59,6 +63,7 @@ public class CinemaHallService {
         suspension.setUntil(cmd.getUntil());
         suspension.setCinemaHall(cinemaHallDao.getReference(cmd.getId()));
         suspensionDao.save(suspension);
+        publisher.publishEvent(new CinemaHallSuspendedEvent(cmd.getId(), cmd.getFrom(), cmd.getUntil()));
     }
 
     @Transactional(readOnly = true)

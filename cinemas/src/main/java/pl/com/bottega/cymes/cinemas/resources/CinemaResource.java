@@ -72,7 +72,7 @@ public class CinemaResource {
     }
 
     @GetMapping("/{id}")
-    public DetailedCinemaInfoDto get(@PathVariable("id") Long cinemaId, @RequestParam("at") Date at) {
+    public DetailedCinemaInfoDto get(@PathVariable("id") Long cinemaId, @RequestParam(value = "at", required = false) Date at) {
         return cinemaService.getDetailedCinemaInfo(cinemaId, at == null ? null : at.toInstant());
     }
 }

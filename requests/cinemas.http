@@ -9,7 +9,7 @@ POST http://localhost:8080/cinemas
 Content-Type: application/json
 
 {
-  "name": "Magnolia",
+  "name": "Magnolia22",
   "city": "Wrocław"
 }
 
@@ -40,12 +40,12 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/cinemas/4/suspensions
+POST http://localhost:8080/cinemas/169/suspensions
 Content-Type: application/json
 
 {
-  "from": "2020-01-01T10:00:00Z",
-  "until": "2020-01-10T12:00:00Z"
+  "from": "2022-01-01T10:00:00Z",
+  "until": "2022-01-10T12:00:00Z"
 }
 
 ###
