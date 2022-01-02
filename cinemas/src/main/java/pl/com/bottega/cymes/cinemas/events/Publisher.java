@@ -9,7 +9,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @AllArgsConstructor
 public class Publisher {
 
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @TransactionalEventListener(
         classes = {
