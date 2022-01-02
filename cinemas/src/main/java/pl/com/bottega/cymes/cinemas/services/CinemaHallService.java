@@ -11,7 +11,6 @@ import pl.com.bottega.cymes.cinemas.dataaccess.model.CinemaHall;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Row;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.RowElement;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Suspension;
-import pl.com.bottega.cymes.cinemas.events.CinemaHallSuspendedEvent;
 import pl.com.bottega.cymes.cinemas.services.audit.Audit;
 import pl.com.bottega.cymes.cinemas.services.commands.CreateCinemaHallCommand;
 import pl.com.bottega.cymes.cinemas.services.commands.SuspendCommand;
@@ -63,7 +62,7 @@ public class CinemaHallService {
         suspension.setUntil(cmd.getUntil());
         suspension.setCinemaHall(cinemaHallDao.getReference(cmd.getId()));
         suspensionDao.save(suspension);
-        publisher.publishEvent(new CinemaHallSuspendedEvent(cmd.getId(), cmd.getFrom(), cmd.getUntil()));
+        // TODO publish event
     }
 
     @Transactional(readOnly = true)

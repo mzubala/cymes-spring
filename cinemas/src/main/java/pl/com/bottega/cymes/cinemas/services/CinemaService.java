@@ -8,7 +8,6 @@ import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.SuspensionDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Cinema;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.Suspension;
-import pl.com.bottega.cymes.cinemas.events.CinemaSuspendedEvent;
 import pl.com.bottega.cymes.cinemas.services.audit.Audit;
 import pl.com.bottega.cymes.cinemas.services.commands.CancelSuspensionCommand;
 import pl.com.bottega.cymes.cinemas.services.commands.CreateCinemaCommand;
@@ -50,7 +49,7 @@ public class CinemaService {
         suspension.setUntil(cmd.getUntil());
         suspension.setActive(true);
         suspensionDao.save(suspension);
-        publisher.publishEvent(new CinemaSuspendedEvent(cinema.getId(), cmd.getFrom(), cmd.getUntil()));
+        // TODO publish event
     }
 
     @Transactional
