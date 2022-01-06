@@ -3,10 +3,10 @@ show-scheduler:
 
 clients:
   cinemas:
-    url: http://localhost:9898
+    url: http://localhost:${wiremock.server.port}
     readTimeout: 1000
   movies:
-    url: http://localhost:9898
+    url: http://localhost:${wiremock.server.port}
     readTimeout: 1000
 
 resilience4j.timelimiter:
