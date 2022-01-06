@@ -3,6 +3,6 @@ show-scheduler:
 
 clients:
   cinemas:
-    url: http://localhost:9898
+    url: http://localhost:${wiremock.server.port}
   movies:
-    url: http://localhost:9898
+    url: http://localhost:${wiremock.server.port}

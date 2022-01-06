@@ -39,6 +39,7 @@ public class PostgresDBExtension implements BeforeAllCallback, BeforeEachCallbac
             tablesToTruncate.add(tableName);
         }
         connection.prepareStatement("TRUNCATE " + tablesToTruncate.stream().collect(Collectors.joining(","))).executeUpdate();
+        connection.close();
     }
 
     @Override
