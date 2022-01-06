@@ -22,6 +22,6 @@ import java.lang.annotation.Target;
 )
 @ContextConfiguration
 @ActiveProfiles("integration")
-@AutoConfigureWireMock(port = 9898)
+@AutoConfigureWireMock(port = 0)
 public @interface IntegrationTest {
 }
