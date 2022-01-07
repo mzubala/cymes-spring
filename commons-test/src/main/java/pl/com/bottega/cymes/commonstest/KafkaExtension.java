@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.cinemas;
+package pl.com.bottega.cymes.commonstest;
 
 import lombok.extern.java.Log;
 import org.junit.jupiter.api.extension.BeforeAllCallback;

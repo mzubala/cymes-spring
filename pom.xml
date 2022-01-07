@@ -24,6 +24,7 @@
         <module>reservations</module>
         <module>notifications</module>
         <module>ticketsgeneration</module>
+        <module>commons-test</module>
     </modules>
 
     <properties>

@@ -1,4 +1,4 @@
-package pl.com.bottega.cymes.showscheduler.integration;
+package pl.com.bottega.cymes.commonstest;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -38,9 +38,6 @@ public class PostgresDBExtension implements BeforeAllCallback, BeforeEachCallbac
             String tableName = tables.getString("TABLE_NAME");
             tablesToTruncate.add(tableName);
         }
-        if(tablesToTruncate.isEmpty()) {
-            return;
-        }
         connection.prepareStatement("TRUNCATE " + tablesToTruncate.stream().collect(Collectors.joining(","))).executeUpdate();
         connection.close();
     }
@@ -54,9 +51,11 @@ public class PostgresDBExtension implements BeforeAllCallback, BeforeEachCallbac
         if (!postgreSQLContainer.isRunning()) {
             postgreSQLContainer.withUsername("app");
             postgreSQLContainer.withPassword("app");
-            postgreSQLContainer.withDatabaseName("shows");
+            postgreSQLContainer.withDatabaseName("postgres-test-container-db");
             postgreSQLContainer.start();
             System.setProperty("spring.datasource.url", postgreSQLContainer.getJdbcUrl());
+            System.setProperty("spring.datasource.username", postgreSQLContainer.getUsername());
+            System.setProperty("spring.datasource.password", postgreSQLContainer.getPassword());
         }
     }
 

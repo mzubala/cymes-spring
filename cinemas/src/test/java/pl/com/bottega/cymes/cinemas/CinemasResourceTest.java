@@ -9,6 +9,7 @@ import pl.com.bottega.cymes.cinemas.events.CinemaSuspendedEvent;
 import pl.com.bottega.cymes.cinemas.resources.request.CreateCinemaRequest;
 import pl.com.bottega.cymes.cinemas.resources.request.SuspendRequest;
 import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaInfoDto;
+import pl.com.bottega.cymes.commonstest.PublishedEventsAssertions;
 
 import java.time.Instant;
 

@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import pl.com.bottega.cymes.commonstest.PostgresDBExtension;
 import pl.com.bottega.cymes.showscheduler.ShowSchedulerApp;
 
 import java.lang.annotation.ElementType;
@@ -17,7 +18,6 @@ import java.lang.annotation.Target;
 @ExtendWith(PostgresDBExtension.class)
 @SpringBootTest(
         classes = {ShowSchedulerApp.class},
-        properties = {"application.environment=integration"},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ContextConfiguration

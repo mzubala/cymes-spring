@@ -1,16 +1,14 @@
-package pl.com.bottega.cymes.cinemas;
+package pl.com.bottega.cymes.commonstest;
 
 import lombok.extern.java.Log;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.awaitility.Awaitility.await;
 
-@Component
 @Log
 public class PublishedEventsAssertions {
 

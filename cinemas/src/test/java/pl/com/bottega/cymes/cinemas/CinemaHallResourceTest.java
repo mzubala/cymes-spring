@@ -12,6 +12,7 @@ import pl.com.bottega.cymes.cinemas.services.dto.BasicCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.RowDto;
 import pl.com.bottega.cymes.cinemas.services.dto.RowElementDto;
+import pl.com.bottega.cymes.commonstest.PublishedEventsAssertions;
 
 import java.time.Instant;
 import java.util.List;
