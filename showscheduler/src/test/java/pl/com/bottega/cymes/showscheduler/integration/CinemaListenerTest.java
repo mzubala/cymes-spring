@@ -28,7 +28,6 @@ public class CinemaListenerTest {
     private KafkaListenerWaiter kafkaListenerWaiter;
 
     @Test
-    @SneakyThrows
     public void cancelsShowWhenCinemaIsSuspended() {
         // given
         var show = new ShowExample().toShow();
@@ -38,10 +37,8 @@ public class CinemaListenerTest {
         // when
         kafkaTemplate.send(CinemaSuspendedEvent.class.getName(), new CinemaSuspendedEvent(show.getCinemaId(), show.getStart(), show.getEnd()));
 
-        await().untilAsserted(() -> {
-            // then
-            assertThat(showRepository.get(show.getId()).isCanceled()).isTrue();
-        });
+        // then
+        await().untilAsserted(() -> assertThat(showRepository.get(show.getId()).isCanceled()).isTrue());
     }
 
     @Test
@@ -58,8 +55,6 @@ public class CinemaListenerTest {
         );
 
         // then
-        await().untilAsserted(() -> {
-            assertThat(showRepository.get(show.getId()).isCanceled()).isTrue();
-        });
+        await().untilAsserted(() -> assertThat(showRepository.get(show.getId()).isCanceled()).isTrue());
     }
 }

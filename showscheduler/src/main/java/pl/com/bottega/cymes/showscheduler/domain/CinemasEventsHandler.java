@@ -13,20 +13,12 @@ public class CinemasEventsHandler {
 
     @Transactional
     public void handle(CinemaSuspendedEvent event) {
-        showRepository
-            .findShowsBetweenInCinema(event.getFrom(), event.getUntil(), event.getCinemaId())
-            .forEach(this::cancelAndSave);
+        // TODO implement event handling
     }
 
     @Transactional
     public void handle(CinemaHallSuspendedEvent event) {
-        showRepository
-            .findShowsBetweenInCinemaHall(event.getFrom(), event.getUntil(), event.getCinemaHallId())
-            .forEach(this::cancelAndSave);
+        // TODO implement event handling
     }
 
-    private void cancelAndSave(Show show) {
-        show.cancel();
-        showRepository.save(show);
-    }
 }
