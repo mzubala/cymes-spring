@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import pl.com.bottega.cymes.commonstest.KafkaExtension;
 import pl.com.bottega.cymes.commonstest.PostgresDBExtension;
 import pl.com.bottega.cymes.showscheduler.ShowSchedulerApp;
 
@@ -15,12 +16,12 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(PostgresDBExtension.class)
+@ExtendWith({PostgresDBExtension.class, KafkaExtension.class})
 @SpringBootTest(
         classes = {ShowSchedulerApp.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-@ContextConfiguration
+@ContextConfiguration(classes = TestConfig.class)
 @ActiveProfiles("integration")
 @AutoConfigureWireMock(port = 0)
 public @interface IntegrationTest {

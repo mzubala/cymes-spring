@@ -16,8 +16,11 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import java.time.Instant;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static pl.com.bottega.cymes.showscheduler.adapters.db.ShowEntity.COLLIDING_SHOWS_PRESENT;
+import static pl.com.bottega.cymes.showscheduler.adapters.db.ShowEntity.SHOWS_BETWEEN_IN_CINEMA;
+import static pl.com.bottega.cymes.showscheduler.adapters.db.ShowEntity.SHOWS_BETWEEN_IN_CINEMA_HALL;
 
 @Component
 @RequiredArgsConstructor
@@ -47,6 +50,18 @@ public class SpringShowRepository implements ShowRepository {
                 .orElseThrow(ShowNotFoundException::new);
     }
 
+    @Override
+    public Stream<Show> findShowsBetweenInCinema(Instant from, Instant until, Long cinemaId) {
+        return springDataShowRepository.findShowsBetweenInCinema(from, until, cinemaId)
+            .map(ShowEntity::toShow);
+    }
+
+    @Override
+    public Stream<Show> findShowsBetweenInCinemaHall(Instant from, Instant until, Long cinemaHallId) {
+        return springDataShowRepository.findShowsBetweenInCinemaHall(from, until, cinemaHallId)
+            .map(ShowEntity::toShow);
+    }
+
     public long countShows() {
         return springDataShowRepository.count();
     }
@@ -55,6 +70,13 @@ public class SpringShowRepository implements ShowRepository {
 interface SpringDataShowRepository extends JpaRepository<ShowEntity, UUID> {
         @Query(name = COLLIDING_SHOWS_PRESENT)
         boolean anyShowsCollidingWith(Instant ns, Instant ne, Long cinemaId, Long cinemaHallId);
+
+        @Query(name = SHOWS_BETWEEN_IN_CINEMA)
+        Stream<ShowEntity> findShowsBetweenInCinema(Instant fromTime, Instant untilTime, Long cinemaId);
+
+        @Query(name = SHOWS_BETWEEN_IN_CINEMA_HALL)
+        Stream<ShowEntity> findShowsBetweenInCinemaHall(Instant fromTime, Instant untilTime, Long cinemaHallId);
+        
 }
 
 @Entity(name = "Show")
@@ -70,9 +92,29 @@ interface SpringDataShowRepository extends JpaRepository<ShowEntity, UUID> {
                 "s.cinemaId = :cinemaId AND " +
                 "s.cinemaHallId = :cinemaHallId"
 )
+@NamedQuery(
+    name = SHOWS_BETWEEN_IN_CINEMA,
+    query = "SELECT s FROM Show s WHERE " +
+        "((:fromTime <= s.start AND :untilTime >= s.start AND :untilTime <= s.end) OR " +
+        "(:fromTime <= s.start AND :untilTime >= s.end)  OR" +
+        "(:fromTime >= s.start AND :untilTime <= s.end) OR " +
+        "(:fromTime >= s.start AND :fromTime <= s.end AND :untilTime >= s.end)) AND " +
+        "s.cinemaId = :cinemaId"
+)
+@NamedQuery(
+    name = SHOWS_BETWEEN_IN_CINEMA_HALL,
+    query = "SELECT s FROM Show s WHERE " +
+        "((:fromTime <= s.start AND :untilTime >= s.start AND :untilTime <= s.end) OR " +
+        "(:fromTime <= s.start AND :untilTime >= s.end)  OR" +
+        "(:fromTime >= s.start AND :untilTime <= s.end) OR " +
+        "(:fromTime >= s.start AND :fromTime <= s.end AND :untilTime >= s.end)) AND " +
+        "s.cinemaHallId = :cinemaHallId"
+)
 class ShowEntity {
 
     static final String COLLIDING_SHOWS_PRESENT = "ShowEntity.countCollidingShows";
+    static final String SHOWS_BETWEEN_IN_CINEMA = "ShowEntity.showsBetweenInCinema";
+    static final String SHOWS_BETWEEN_IN_CINEMA_HALL = "ShowEntity.showsBetweenInCinemaHall";
 
     @Id
     private UUID id;
@@ -81,6 +123,7 @@ class ShowEntity {
     private Long cinemaHallId;
     private Instant start;
     private Instant end;
+    private boolean canceled;
     @Version
     private Long version;
 
@@ -91,9 +134,11 @@ class ShowEntity {
         this.cinemaHallId = show.getCinemaHallId();
         this.start = show.getStart();
         this.end = show.getEnd();
+        this.canceled = show.isCanceled();
+        this.version = show.getVersion();
     }
 
     Show toShow() {
-        return new Show(id, movieId, cinemaId, cinemaHallId, start, end);
+        return new Show(id, movieId, cinemaId, cinemaHallId, start, end, canceled, version);
     }
 }

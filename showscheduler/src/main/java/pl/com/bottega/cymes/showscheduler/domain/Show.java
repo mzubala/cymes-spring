@@ -14,6 +14,8 @@ public class Show {
     private Long cinemaHallId;
     private Instant start;
     private Instant end;
+    private boolean canceled;
+    private Long version;
 
     Show(ScheduleShowCommand cmd, Movie movie, ShowSchedulerConfiguration configuration) {
         this.id = cmd.getShowId();
@@ -24,13 +26,16 @@ public class Show {
         this.end = start.plus(movie.getDurationMinutes(), MINUTES).plus(configuration.showReservationBuffer());
     }
 
-    public Show(UUID id, Long movieId, Long cinemaId, Long cinemaHallId, Instant start, Instant end) {
+    public Show(UUID id, Long movieId, Long cinemaId, Long cinemaHallId, Instant start, Instant end, boolean canceled,
+                Long version) {
         this.id = id;
         this.movieId = movieId;
         this.cinemaId = cinemaId;
         this.cinemaHallId = cinemaHallId;
         this.start = start;
         this.end = end;
+        this.canceled = canceled;
+        this.version = version;
     }
 
     public UUID getId() {
@@ -55,5 +60,17 @@ public class Show {
 
     public Long getCinemaId() {
         return cinemaId;
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void cancel() {
+        this.canceled = true;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 }

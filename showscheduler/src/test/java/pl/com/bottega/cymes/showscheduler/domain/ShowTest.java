@@ -35,5 +35,18 @@ public class ShowTest {
         assertThat(show.getCinemaHallId()).isEqualTo(cmd.getCinemaHallId());
         assertThat(show.getCinemaId()).isEqualTo(cmd.getCinemaId());
         assertThat(show.getMovieId()).isEqualTo(movie.getId());
+        assertThat(show.isCanceled()).isFalse();
+    }
+
+    @Test
+    public void cancelsShow() {
+        // given
+        var show = new ShowExample().toShow();
+
+        // when
+        show.cancel();
+
+        // then
+        assertThat(show.isCanceled()).isTrue();
     }
 }

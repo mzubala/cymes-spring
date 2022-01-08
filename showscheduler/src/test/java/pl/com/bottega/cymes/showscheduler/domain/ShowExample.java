@@ -18,8 +18,9 @@ public class ShowExample {
     private Long cinemaHallId = Math.abs(new Random().nextLong());
     private Instant start = Instant.now().plusMillis(Math.abs(new Random().nextInt(200000)));
     private Instant end = start.plusMillis(Math.abs(new Random().nextInt(200000)));
+    private boolean canceled;
 
     public Show toShow() {
-        return new Show(id, movieId, cinemaId, cinemaHallId, start, end);
+        return new Show(id, movieId, cinemaId, cinemaHallId, start, end, canceled, null);
     }
 }

@@ -13,4 +13,10 @@ public class CommonsTestConfiguration {
     PublishedEventsAssertions publishedEventsAssertions() {
         return new PublishedEventsAssertions();
     }
+
+    @Bean
+    @ConditionalOnBean(KafkaTemplate.class)
+    KafkaListenerWaiter kafkaListenerWaiter() {
+        return new KafkaListenerWaiter();
+    }
 }

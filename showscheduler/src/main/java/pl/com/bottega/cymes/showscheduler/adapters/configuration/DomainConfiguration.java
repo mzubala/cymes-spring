@@ -2,6 +2,7 @@ package pl.com.bottega.cymes.showscheduler.adapters.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.com.bottega.cymes.showscheduler.domain.CinemasEventsHandler;
 import pl.com.bottega.cymes.showscheduler.domain.DefaultScheduleShowHandler;
 import pl.com.bottega.cymes.showscheduler.domain.ports.MovieCatalog;
 import pl.com.bottega.cymes.showscheduler.domain.ports.OperationLocker;
@@ -20,5 +21,10 @@ public class DomainConfiguration {
                                                    ShowSchedulerConfiguration showSchedulerConfiguration
     ) {
         return new DefaultScheduleShowHandler(movieCatalog, showRepository, suspensionChecker, operationLocker, showSchedulerConfiguration);
+    }
+
+    @Bean
+    public CinemasEventsHandler cinemasEventsHandler(ShowRepository showRepository) {
+        return new CinemasEventsHandler(showRepository);
     }
 }
