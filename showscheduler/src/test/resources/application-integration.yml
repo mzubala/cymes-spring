@@ -4,5 +4,7 @@ show-scheduler:
 clients:
   cinemas:
     url: http://localhost:${wiremock.server.port}
+    read-timeout: 1000
   movies:
     url: http://localhost:${wiremock.server.port}
+    read-timeout: 1000
