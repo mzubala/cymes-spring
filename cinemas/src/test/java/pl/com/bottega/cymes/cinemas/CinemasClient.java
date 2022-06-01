@@ -1,7 +1,6 @@
 package pl.com.bottega.cymes.cinemas;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -36,5 +35,12 @@ public class CinemasClient {
         return (uriBuilder) -> uriBuilder
                 .host("localhost")
                 .port(applicationContext.getEnvironment().getProperty("local.server.port"));
+    }
+
+    public ResponseSpec getCinemaHall(Long id) {
+        return webTestClient
+                .get()
+                .uri(withHostAndPort().andThen((uriBuilder) -> uriBuilder.path("/halls/{hallId}").build(id)))
+                .exchange();
     }
 }
