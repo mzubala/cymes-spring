@@ -1,7 +1,7 @@
-package pl.com.bottega.cymes.reservations.domain.application;
+package pl.com.bottega.cymes.reservations.domain.model.model.application;
 
 import lombok.Value;
-import pl.com.bottega.cymes.reservations.domain.model.Seat;
+import pl.com.bottega.cymes.reservations.domain.model.model.model.Seat;
 
 import java.util.Set;
 import java.util.UUID;

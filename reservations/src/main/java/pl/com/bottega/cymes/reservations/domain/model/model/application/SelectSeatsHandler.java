@@ -1,8 +1,7 @@
-package pl.com.bottega.cymes.reservations.domain.application;
+package pl.com.bottega.cymes.reservations.domain.model.model.application;
 
 import lombok.AllArgsConstructor;
-import pl.com.bottega.cymes.reservations.domain.model.Seat;
-import pl.com.bottega.cymes.reservations.domain.model.SeatReservation;
+import pl.com.bottega.cymes.reservations.domain.model.model.model.SeatReservation;
 
 @AllArgsConstructor
 public class SelectSeatsHandler {
