@@ -4,15 +4,17 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   movies:
     build: ./movies
     ports:
       - "8088:8088"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   db:
-    image: postgres
+    image: postgres:14
     ports:
       - "5432:5432"
     volumes:
@@ -23,3 +25,8 @@ services:
       - POSTGRES_PASSWORD=postgres
       - APP_DB_USER=app
       - APP_DB_PASS=app
+    healthcheck:
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
+      interval: 5s
+      timeout: 10s
+      retries: 20
