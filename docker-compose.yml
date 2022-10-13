@@ -4,17 +4,21 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
-      - kafka
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
   shows:
-    build: ./cinemas
+    build: ./showscheduler
     ports:
       - "8081:8081"
     depends_on:
-      - db
-      - kafka
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
   db:
-    image: postgres:13
+    image: postgres:14
     ports:
       - "5432:5432"
     volumes:
@@ -25,6 +29,11 @@ services:
       - POSTGRES_PASSWORD=postgres
       - APP_DB_USER=app
       - APP_DB_PASS=app
+    healthcheck:
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
+      interval: 5s
+      timeout: 10s
+      retries: 20
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
