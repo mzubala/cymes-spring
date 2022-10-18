@@ -33,7 +33,6 @@ class DefaultScheduleShowHandler implements ScheduleShowHandler {
                 throw new CinemaHallNotAvailableException();
             }
             showRepository.save(show);
-            return null;
         });
     }
 }
