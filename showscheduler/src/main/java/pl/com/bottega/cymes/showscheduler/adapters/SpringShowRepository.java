@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class SpringShowRepository implements ShowRepository {
 
     @Override
     public boolean anyShowsCollidingWith(Show show) {
-        return springDataShowRepository.anyShowsCollidingWith(
+        return springDataShowRepository.countCollidingShows(
                 show.getStart(),
                 show.getEnd(),
                 show.getCinemaId(),
@@ -49,8 +50,7 @@ public class SpringShowRepository implements ShowRepository {
 }
 
 interface SpringDataShowRepository extends JpaRepository<ShowEntity, UUID> {
-        @Query(name = COLLIDING_SHOWS_PRESENT)
-        boolean anyShowsCollidingWith(Instant ns, Instant ne, Long cinemaId, Long cinemaHallId);
+        boolean countCollidingShows(Instant ns, Instant ne, Long cinemaId, Long cinemaHallId);
 }
 
 @Entity(name = "Show")
