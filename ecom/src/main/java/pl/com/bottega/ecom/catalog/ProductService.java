@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static pl.com.bottega.ecom.catalog.ProductSpecifications.categoryIdEquals;
+import static pl.com.bottega.ecom.catalog.ProductSpecifications.nameMatches;
+
 @Component
 @RequiredArgsConstructor
 class ProductService {
@@ -35,17 +38,8 @@ class ProductService {
     }
 
     List<ProductDto> search(String phrase, UUID categoryId) {
-        List<Product> products;
-        if (phrase != null && categoryId != null) {
-            products = productRepository.findByNameLikeAndCategoryId("%" + phrase + "%", categoryId);
-        } else if (phrase != null) {
-            products = productRepository.findByNameLike("%" + phrase + "%");
-        } else if (categoryId != null) {
-            products = productRepository.findByCategoryId(categoryId);
-        } else {
-            products = productRepository.findAll();
-        }
-        return products.stream().map(p -> new ProductDto(p.getId(), p.getCategory().getId(), p.getName())).collect(Collectors.toList());
+        return productRepository.findAll(nameMatches(phrase).and(categoryIdEquals(categoryId))
+        ).stream().map(p -> new ProductDto(p.getId(), p.getCategory().getId(), p.getName())).collect(Collectors.toList());
     }
 
     @Value
