@@ -2,7 +2,7 @@ package pl.com.bottega.ecom.catalog;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,36 +20,25 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/categories")
-@Log
+@RequiredArgsConstructor
 class CategoryController {
 
     private final CategoryService categoryService;
 
-    CategoryController(CategoryService categoryService) {
-        log.info("Creating controller");
-        this.categoryService = categoryService;
-    }
-
     @PostMapping
     ResponseEntity<CreateCategoryResponse> createCategory(@RequestBody CreateCategoryRequest request) {
-        log.info(String.format("Create category %s", request));
         var id = categoryService.create(new CreateCategoryCommand(request.name));
         return new ResponseEntity<>(new CreateCategoryResponse(id), HttpStatus.CREATED);
     }
 
     @GetMapping
-    List<SearchedCategoryResponse> searchCategories(@RequestParam("phrase") String searchPhrase) {
-        log.info(String.format("Search category, phrase: %s", searchPhrase));
-        return List.of(
-            new SearchedCategoryResponse(UUID.randomUUID(), "Jedzenie"),
-            new SearchedCategoryResponse(UUID.randomUUID(), "Moda"),
-            new SearchedCategoryResponse(UUID.randomUUID(), "Uroda")
-        );
+    List<CategoryDto> searchCategories(@RequestParam("phrase") String searchPhrase) {
+        return categoryService.search(searchPhrase);
     }
 
     @PutMapping("/{categoryId}")
     void updateCategory(@PathVariable UUID categoryId, @RequestBody UpdateCategoryRequest request) {
-        log.info(String.format("Updating category %s, %s", categoryId, request));
+        categoryService.update(new UpdateCategoryCommand(categoryId, request.name));
     }
 }
 
@@ -62,13 +51,6 @@ class CreateCategoryRequest {
 @AllArgsConstructor
 class CreateCategoryResponse {
     UUID categoryId;
-}
-
-@Data
-@AllArgsConstructor
-class SearchedCategoryResponse {
-    UUID categoryId;
-    String name;
 }
 
 @Data

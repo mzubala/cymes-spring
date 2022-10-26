@@ -2,7 +2,7 @@ package pl.com.bottega.ecom.catalog;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.java.Log;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,35 +18,25 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
-@Log
+@RequiredArgsConstructor
 class ProductController {
 
     private final ProductService productService;
 
-    ProductController(ProductService productService) {
-        log.info("Creating controller");
-        this.productService = productService;
-    }
-
     @PostMapping
     ResponseEntity<CreateProductResponse> createProduct(@RequestBody CreateProductRequest request) {
-        log.info(String.format("Create product %s", request));
         var id = productService.create(new CreateProductCommand(request.name, request.categoryId));
         return new ResponseEntity<>(new CreateProductResponse(id), HttpStatus.CREATED);
     }
 
     @GetMapping
-    List<SearchedProductResponse> searchProducts(SearchProductsRequest request) {
-        log.info(String.format("Search products %s", request));
-        return List.of(
-            new SearchedProductResponse(UUID.randomUUID(), UUID.randomUUID(), "Chleb"),
-            new SearchedProductResponse(UUID.randomUUID(), UUID.randomUUID(), "Bułka")
-        );
+    List<ProductDto> searchProducts(SearchProductsRequest request) {
+        return productService.search(request.phrase, request.categoryId);
     }
 
     @PutMapping("/{productId}")
     void updateProduct(@PathVariable UUID productId, @RequestBody UpdateProductRequest request) {
-        log.info(String.format("Updating product %s, %s", productId, request));
+        productService.update(new UpdateProductCommand(productId, request.name, request.categoryId));
     }
 }
 
@@ -60,14 +50,6 @@ class CreateProductRequest {
 @AllArgsConstructor
 class CreateProductResponse {
     UUID productId;
-}
-
-@Data
-@AllArgsConstructor
-class SearchedProductResponse {
-    UUID productId;
-    UUID categoryId;
-    String name;
 }
 
 @Data
