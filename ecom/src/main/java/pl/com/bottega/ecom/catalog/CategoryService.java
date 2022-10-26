@@ -1,28 +1,35 @@
 package pl.com.bottega.ecom.catalog;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 class CategoryService {
 
+    private final CategoryRepository categoryRepository;
+
     UUID create(CreateCategoryCommand createCategoryCommand) {
-        return UUID.randomUUID();
+        var category = new Category(UUID.randomUUID(), createCategoryCommand.getName());
+        categoryRepository.save(category);
+        return category.getId();
     }
 
     List<CategoryDto> search(String searchPhrase) {
-        return List.of(
-            new CategoryDto(UUID.randomUUID(), "Jedzenie"),
-            new CategoryDto(UUID.randomUUID(), "Moda"),
-            new CategoryDto(UUID.randomUUID(), "Uroda")
-        );
+        return categoryRepository.findByNameLike("%" + searchPhrase + "%").stream()
+            .map(category -> new CategoryDto(category.getId(), category.getName()))
+            .collect(Collectors.toList());
     }
 
     void update(UpdateCategoryCommand updateCategoryCommand) {
-
+        var category = categoryRepository.getById(updateCategoryCommand.getCategoryId());
+        category.setName(updateCategoryCommand.getName());
+        categoryRepository.save(category);
     }
 }
