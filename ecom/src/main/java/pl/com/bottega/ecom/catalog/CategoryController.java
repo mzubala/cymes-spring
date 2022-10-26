@@ -3,7 +3,6 @@ package pl.com.bottega.ecom.catalog;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,7 @@ class CategoryController {
 
     @PostMapping
     ResponseEntity<CreateCategoryResponse> createCategory(@RequestBody CreateCategoryRequest request) {
-        var id = categoryService.create(new CreateCategoryCommand(request.name));
+        var id = categoryService.create(new CategoryService.CreateCategoryCommand(request.name));
         return new ResponseEntity<>(new CreateCategoryResponse(id), HttpStatus.CREATED);
     }
 
@@ -38,7 +37,7 @@ class CategoryController {
 
     @PutMapping("/{categoryId}")
     void updateCategory(@PathVariable UUID categoryId, @RequestBody UpdateCategoryRequest request) {
-        categoryService.update(new UpdateCategoryCommand(categoryId, request.name));
+        categoryService.update(new CategoryService.UpdateCategoryCommand(categoryId, request.name));
     }
 }
 

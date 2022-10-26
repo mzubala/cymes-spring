@@ -23,12 +23,12 @@ POST http://localhost:9090/products
 Content-type: application/json
 
 {
-  "name": "Jedzenie",
-  "categoryId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81"
+  "name": "Chlebek",
+  "categoryId": "5436ea04-0350-40b5-b723-d3c777a20b3c"
 }
 ###
 
-GET http://localhost:9090/products?phrase=Test
+GET http://localhost:9090/products
 
 ###
 

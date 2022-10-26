@@ -25,7 +25,7 @@ class ProductController {
 
     @PostMapping
     ResponseEntity<CreateProductResponse> createProduct(@RequestBody CreateProductRequest request) {
-        var id = productService.create(new CreateProductCommand(request.name, request.categoryId));
+        var id = productService.create(new ProductService.CreateProductCommand(request.name, request.categoryId));
         return new ResponseEntity<>(new CreateProductResponse(id), HttpStatus.CREATED);
     }
 
@@ -36,7 +36,7 @@ class ProductController {
 
     @PutMapping("/{productId}")
     void updateProduct(@PathVariable UUID productId, @RequestBody UpdateProductRequest request) {
-        productService.update(new UpdateProductCommand(productId, request.name, request.categoryId));
+        productService.update(new ProductService.UpdateProductCommand(productId, request.name, request.categoryId));
     }
 }
 
