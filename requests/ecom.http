@@ -1,0 +1,41 @@
+POST http://localhost:9090/categories
+Content-type: application/json
+
+{
+  "name": "Jedzenie"
+}
+###
+
+GET http://localhost:9090/categories?phrase=Test
+
+###
+
+PUT http://localhost:9090/categories/bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81
+Content-type: application/json
+
+{
+  "name": "Samochody"
+}
+
+###
+
+POST http://localhost:9090/products
+Content-type: application/json
+
+{
+  "name": "Jedzenie",
+  "categoryId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81"
+}
+###
+
+GET http://localhost:9090/products?phrase=Test
+
+###
+
+PUT http://localhost:9090/products/bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81
+Content-type: application/json
+
+{
+  "name": "Samochody",
+  "categoryId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81"
+}
