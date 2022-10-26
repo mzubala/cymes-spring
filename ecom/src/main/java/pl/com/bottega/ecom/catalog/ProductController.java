@@ -35,11 +35,8 @@ class ProductController {
     }
 
     @GetMapping
-    List<SearchedProductResponse> searchProducts(
-        @RequestParam(value = "phrase", required = false) String searchPhrase,
-        @RequestParam(value = "categoryId", required = false) UUID categoryId
-    ) {
-        log.info(String.format("Search product, phrase: %s, categoryId: %s", searchPhrase, categoryId));
+    List<SearchedProductResponse> searchProducts(SearchProductsRequest request) {
+        log.info(String.format("Search products %s", request));
         return List.of(
             new SearchedProductResponse(UUID.randomUUID(), UUID.randomUUID(), "Chleb"),
             new SearchedProductResponse(UUID.randomUUID(), UUID.randomUUID(), "Bułka")
@@ -74,5 +71,11 @@ class SearchedProductResponse {
 @Data
 class UpdateProductRequest {
     String name;
+    UUID categoryId;
+}
+
+@Data
+class SearchProductsRequest {
+    String phrase;
     UUID categoryId;
 }
