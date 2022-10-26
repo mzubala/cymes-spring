@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,16 +21,18 @@ import java.util.UUID;
 @Log
 class ProductController {
 
-    ProductController() {
+    private final ProductService productService;
+
+    ProductController(ProductService productService) {
         log.info("Creating controller");
+        this.productService = productService;
     }
 
     @PostMapping
     ResponseEntity<CreateProductResponse> createProduct(@RequestBody CreateProductRequest request) {
         log.info(String.format("Create product %s", request));
-        var response = new CreateProductResponse();
-        response.setProductId(UUID.randomUUID());
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        var id = productService.create(new CreateProductCommand(request.name, request.categoryId));
+        return new ResponseEntity<>(new CreateProductResponse(id), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -56,6 +57,7 @@ class CreateProductRequest {
 }
 
 @Data
+@AllArgsConstructor
 class CreateProductResponse {
     UUID productId;
 }

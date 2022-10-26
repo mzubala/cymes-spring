@@ -23,16 +23,18 @@ import java.util.UUID;
 @Log
 class CategoryController {
 
-    CategoryController() {
+    private final CategoryService categoryService;
+
+    CategoryController(CategoryService categoryService) {
         log.info("Creating controller");
+        this.categoryService = categoryService;
     }
 
     @PostMapping
     ResponseEntity<CreateCategoryResponse> createCategory(@RequestBody CreateCategoryRequest request) {
         log.info(String.format("Create category %s", request));
-        var response = new CreateCategoryResponse();
-        response.setCategoryId(UUID.randomUUID());
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        var id = categoryService.create(new CreateCategoryCommand(request.name));
+        return new ResponseEntity<>(new CreateCategoryResponse(id), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -57,6 +59,7 @@ class CreateCategoryRequest {
 }
 
 @Data
+@AllArgsConstructor
 class CreateCategoryResponse {
     UUID categoryId;
 }
