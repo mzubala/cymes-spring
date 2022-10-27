@@ -21,13 +21,10 @@ class AuditAspect {
     private final PersistentCommandRepository repository;
     private final ObjectMapper objectMapper;
 
-    @After("@within(pl.com.bottega.ecom.infrastructure.Audit) || @annotation(pl.com.bottega.ecom.infrastructure.Audit)")
-    void audit(JoinPoint joinPoint) {
-        Arrays.stream(joinPoint.getArgs())
-            .filter(arg -> arg instanceof UserCommand)
-            .map(arg -> (UserCommand) arg)
-            .map(this::toPersistentCommand)
-            .forEach(repository::save);
+    @After("(@within(pl.com.bottega.ecom.infrastructure.Audit) || @annotation(pl.com.bottega.ecom.infrastructure.Audit)) " +
+        "&& args(command)")
+    void audit(UserCommand command) {
+        repository.save(toPersistentCommand(command));
     }
 
     @SneakyThrows
