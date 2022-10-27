@@ -3,6 +3,9 @@ package pl.com.bottega.ecom.catalog;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import pl.com.bottega.ecom.UserCommand;
+import pl.com.bottega.ecom.infrastructure.Timed;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,12 +17,14 @@ import static pl.com.bottega.ecom.catalog.ProductSpecifications.nameMatches;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    UUID create(CreateProductCommand createProductCommand) {
+    @Timed
+    public UUID create(CreateProductCommand createProductCommand) {
         var category = categoryRepository.getById(createProductCommand.getCategoryId());
         var product = new Product(
             UUID.randomUUID(),
@@ -31,7 +36,7 @@ class ProductService {
         return product.getId();
     }
 
-    void update(UpdateProductCommand updateProductCommand) {
+    public void update(UpdateProductCommand updateProductCommand) {
         var category = categoryRepository.getById(updateProductCommand.getCategoryId());
         var product = productRepository.getById(updateProductCommand.getProductId());
         product.setName(updateProductCommand.getName());
@@ -40,20 +45,20 @@ class ProductService {
         productRepository.save(product);
     }
 
-    List<ProductDto> search(String phrase, UUID categoryId) {
+    public List<ProductDto> search(String phrase, UUID categoryId) {
         return productRepository.findAll(nameMatches(phrase).and(categoryIdEquals(categoryId))
         ).stream().map(p -> new ProductDto(p.getId(), p.getCategory().getId(), p.getName())).collect(Collectors.toList());
     }
 
     @Value
-    static class CreateProductCommand {
+    static class CreateProductCommand extends UserCommand {
         String name;
         UUID categoryId;
         BigDecimal price;
     }
 
     @Value
-    static class UpdateProductCommand {
+    static class UpdateProductCommand extends UserCommand {
         UUID productId;
         String name;
         BigDecimal price;

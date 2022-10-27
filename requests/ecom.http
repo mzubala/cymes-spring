@@ -6,7 +6,7 @@ Content-type: application/json
 }
 ###
 
-GET http://localhost:9090/categories?phrase=dze
+GET http://localhost:9090/categories?phrase=Je
 
 ###
 
@@ -24,7 +24,7 @@ Content-type: application/json
 
 {
   "name": "Chlebek",
-  "categoryId": "03f36cce-b2c6-4f51-8f39-08b19896edd4",
+  "categoryId": "5fb3096f-e89f-48f4-818e-fa561dbf70ce",
   "price": "8.90"
 }
 ###
