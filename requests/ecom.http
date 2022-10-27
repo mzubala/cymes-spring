@@ -69,5 +69,24 @@ POST http://localhost:9090/carts
 Content-type: application/json
 
 {
-  "productId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81"
+  "productId": "6ba02c4e-04ae-4321-bda5-6bb4def03086"
+}
+
+###
+
+PUT http://localhost:9090/carts
+Content-type: application/json
+
+{
+  "productId": "6ba02c4e-04ae-4321-bda5-6bb4def03086",
+  "newQuantity": 6
+}
+
+###
+
+DELETE http://localhost:9090/carts
+Content-type: application/json
+
+{
+  "productId": "6ba02c4e-04ae-4321-bda5-6bb4def03086"
 }

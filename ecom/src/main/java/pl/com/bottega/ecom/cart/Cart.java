@@ -21,7 +21,7 @@ class Cart {
     @Id
     private UUID id;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "index")
     private List<CartItem> items = new LinkedList<>();
 
@@ -63,5 +63,9 @@ class Cart {
 
     private static EntityNotFoundException entityNotFoundException(UUID productId) {
         return new EntityNotFoundException(String.format("Product with id %s is not found", productId));
+    }
+
+    UUID getId() {
+        return id;
     }
 }
