@@ -38,7 +38,7 @@ class CategoryController {
     }
 
     @PutMapping("/{categoryId}")
-    void updateCategory(@PathVariable UUID categoryId, @RequestBody UpdateCategoryRequest request) {
+    void updateCategory(@PathVariable UUID categoryId, @Valid @RequestBody UpdateCategoryRequest request) {
         categoryService.update(new CategoryService.UpdateCategoryCommand(categoryId, request.name));
     }
 }
@@ -57,5 +57,6 @@ class CreateCategoryResponse {
 
 @Data
 class UpdateCategoryRequest {
+    @NotBlank
     String name;
 }

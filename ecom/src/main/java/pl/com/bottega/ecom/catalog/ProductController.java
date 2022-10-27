@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +29,7 @@ class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    ResponseEntity<CreateProductResponse> createProduct(@RequestBody CreateProductRequest request) {
+    ResponseEntity<CreateProductResponse> createProduct(@Valid @RequestBody CreateProductRequest request) {
         var id = productService.create(new ProductService.CreateProductCommand(request.name, request.categoryId, request.price));
         return new ResponseEntity<>(new CreateProductResponse(id), HttpStatus.CREATED);
     }
@@ -37,15 +40,19 @@ class ProductController {
     }
 
     @PutMapping("/{productId}")
-    void updateProduct(@PathVariable UUID productId, @RequestBody UpdateProductRequest request) {
+    void updateProduct(@PathVariable UUID productId, @Valid @RequestBody UpdateProductRequest request) {
         productService.update(new ProductService.UpdateProductCommand(productId, request.name, request.price, request.categoryId));
     }
 }
 
 @Data
 class CreateProductRequest {
+    @NotBlank
     String name;
+    @NotNull
     UUID categoryId;
+    @NotNull
+    @Min(value = 0)
     BigDecimal price;
 }
 
@@ -57,9 +64,12 @@ class CreateProductResponse {
 
 @Data
 class UpdateProductRequest {
+    @NotBlank
     String name;
-
+    @NotNull
+    @Min(value = 0)
     BigDecimal price;
+    @NotNull
     UUID categoryId;
 }
 

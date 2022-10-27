@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @RestController
@@ -18,7 +22,7 @@ class UserController {
     private final UserRepository userRepository;
 
     @PostMapping
-    RegisterResponse register(@RequestBody RegisterRequest request) {
+    RegisterResponse register(@Valid @RequestBody RegisterRequest request) {
         var user = new User(UUID.randomUUID(), request.email, request.password);
         userRepository.save(user);
         return new RegisterResponse(user.getId());
@@ -31,7 +35,10 @@ class UserController {
 
     @Data
     static class RegisterRequest {
+        @Email
         String email;
+        @NotBlank
+        @Size(min = 6)
         String password;
     }
 }
