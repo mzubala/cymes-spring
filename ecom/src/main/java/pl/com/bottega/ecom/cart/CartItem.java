@@ -43,6 +43,17 @@ class CartItem {
     void increaseCount() {
         itemsCount++;
     }
+
+    boolean contains(UUID productId) {
+        return product.getId().equals(productId);
+    }
+
+    void changeQuantity(Long newQuantity) {
+        if(newQuantity < 1) {
+            throw new IllegalArgumentException();
+        }
+        this.itemsCount = newQuantity;
+    }
 }
 
 @Embeddable

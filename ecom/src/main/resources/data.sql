@@ -1,0 +1,1 @@
+insert into USER values ('386e8098560511edbdc30242ac120002', 'test@test.com', '123456');

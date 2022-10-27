@@ -9,9 +9,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserFacade {
 
-    private final UserRepository productRepository;
+    private final UserRepository userRepository;
 
     public User getById(UUID userId) {
-        return null;
+        return userRepository.getById(userId);
     }
 }

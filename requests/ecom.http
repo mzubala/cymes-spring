@@ -4,6 +4,7 @@ Content-type: application/json
 {
   "name": "Jedzenie"
 }
+
 ###
 
 POST http://localhost:9090/categories
@@ -12,6 +13,7 @@ Content-type: application/json
 {
   "name": ""
 }
+
 ###
 
 GET http://localhost:9090/categories?phrase=Je
@@ -35,6 +37,7 @@ Content-type: application/json
   "categoryId": "5fb3096f-e89f-48f4-818e-fa561dbf70ce",
   "price": "8.90"
 }
+
 ###
 
 GET http://localhost:9090/products
@@ -58,4 +61,13 @@ Content-type: application/json
 {
   "email": "john.doe@test.com",
   "password": "Test1234"
+}
+
+###
+
+POST http://localhost:9090/carts
+Content-type: application/json
+
+{
+  "productId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81"
 }

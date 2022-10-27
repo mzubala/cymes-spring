@@ -12,6 +12,6 @@ public class CatalogFacade {
     private final ProductRepository productRepository;
 
     public Product getProductById(UUID productId) {
-        return null;
+        return productRepository.getById(productId);
     }
 }

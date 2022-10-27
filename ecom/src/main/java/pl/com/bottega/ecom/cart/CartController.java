@@ -10,12 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/carts")
 @AllArgsConstructor
 class CartController {
+
+    private static final UUID TMP_USER_ID = UUID.fromString("386e8098-5605-11ed-bdc3-0242ac120002");
 
     private final CartService cartService;
 
@@ -25,33 +30,37 @@ class CartController {
     }
 
     @PostMapping
-    void addToCart(@RequestBody AddToCartRequest addToCartRequest) {
-
+    void addToCart(@Valid @RequestBody AddToCartRequest request) {
+        cartService.addToCart(request.productId, TMP_USER_ID);
     }
 
     @DeleteMapping
-    void removeFromCart(@RequestBody RemoveFromCartRequest addToCartRequest) {
-
+    void removeFromCart(@Valid @RequestBody RemoveFromCartRequest request) {
+        cartService.removeFromCart(request.productId, TMP_USER_ID);
     }
 
     @PutMapping
-    void changeQuantity(@RequestBody ChangeQuantityInCartRequest addToCartRequest) {
-
+    void changeQuantity(@Valid @RequestBody ChangeQuantityInCartRequest request) {
+        cartService.changeQuantity(request.productId, TMP_USER_ID, request.newQuantity);
     }
 
     @Data
     static class AddToCartRequest {
+        @NotNull
         UUID productId;
     }
 
     @Data
     static class RemoveFromCartRequest {
+        @NotNull
         UUID productId;
     }
 
     @Data
     static class ChangeQuantityInCartRequest {
+        @NotNull
         UUID productId;
+        @Min(1)
         Long newQuantity;
     }
 }
