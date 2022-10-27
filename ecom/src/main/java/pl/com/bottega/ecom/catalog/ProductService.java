@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ class ProductService {
         var product = new Product(
             UUID.randomUUID(),
             createProductCommand.getName(),
+            createProductCommand.getPrice(),
             category
         );
         productRepository.save(product);
@@ -34,6 +36,7 @@ class ProductService {
         var product = productRepository.getById(updateProductCommand.getProductId());
         product.setName(updateProductCommand.getName());
         product.setCategory(category);
+        product.setPrice(updateProductCommand.getPrice());
         productRepository.save(product);
     }
 
@@ -46,12 +49,14 @@ class ProductService {
     static class CreateProductCommand {
         String name;
         UUID categoryId;
+        BigDecimal price;
     }
 
     @Value
     static class UpdateProductCommand {
         UUID productId;
         String name;
+        BigDecimal price;
         UUID categoryId;
     }
 }

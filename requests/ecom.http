@@ -24,7 +24,8 @@ Content-type: application/json
 
 {
   "name": "Chlebek",
-  "categoryId": "42e3636f-5885-4436-b6af-fc1ea72ce68d"
+  "categoryId": "03f36cce-b2c6-4f51-8f39-08b19896edd4",
+  "price": "8.90"
 }
 ###
 
@@ -37,5 +38,16 @@ Content-type: application/json
 
 {
   "name": "Samochody",
-  "categoryId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81"
+  "categoryId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81",
+  "price": 5.60
+}
+
+###
+
+POST http://localhost:9090/users
+Content-type: application/json
+
+{
+  "email": "john.doe@test.com",
+  "password": "Test1234"
 }

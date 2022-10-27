@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ class ProductController {
 
     @PostMapping
     ResponseEntity<CreateProductResponse> createProduct(@RequestBody CreateProductRequest request) {
-        var id = productService.create(new ProductService.CreateProductCommand(request.name, request.categoryId));
+        var id = productService.create(new ProductService.CreateProductCommand(request.name, request.categoryId, request.price));
         return new ResponseEntity<>(new CreateProductResponse(id), HttpStatus.CREATED);
     }
 
@@ -36,7 +37,7 @@ class ProductController {
 
     @PutMapping("/{productId}")
     void updateProduct(@PathVariable UUID productId, @RequestBody UpdateProductRequest request) {
-        productService.update(new ProductService.UpdateProductCommand(productId, request.name, request.categoryId));
+        productService.update(new ProductService.UpdateProductCommand(productId, request.name, request.price, request.categoryId));
     }
 }
 
@@ -44,6 +45,7 @@ class ProductController {
 class CreateProductRequest {
     String name;
     UUID categoryId;
+    BigDecimal price;
 }
 
 @Data
@@ -55,6 +57,8 @@ class CreateProductResponse {
 @Data
 class UpdateProductRequest {
     String name;
+
+    BigDecimal price;
     UUID categoryId;
 }
 
