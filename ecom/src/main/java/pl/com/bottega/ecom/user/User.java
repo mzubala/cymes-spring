@@ -19,7 +19,7 @@ import java.util.UUID;
         @Index(columnList = "email", unique = true)
     }
 )
-class User {
+public class User {
     @Id
     private UUID id;
     private String email;

@@ -14,6 +14,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+public
 class Product {
 
     @Id
