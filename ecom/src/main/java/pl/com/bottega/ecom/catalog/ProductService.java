@@ -5,6 +5,7 @@ import lombok.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.ecom.UserCommand;
+import pl.com.bottega.ecom.infrastructure.Audit;
 import pl.com.bottega.ecom.infrastructure.Timed;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import static pl.com.bottega.ecom.catalog.ProductSpecifications.nameMatches;
 @Component
 @RequiredArgsConstructor
 @Transactional
+@Audit
 class ProductService {
 
     private final ProductRepository productRepository;
