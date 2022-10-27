@@ -1,6 +1,7 @@
 package pl.com.bottega.ecom.cart;
 
 import lombok.NoArgsConstructor;
+import pl.com.bottega.ecom.catalog.Product;
 import pl.com.bottega.ecom.user.User;
 
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import java.util.UUID;
 class Cart {
     @Id
     private UUID id;
+
     @OneToMany(mappedBy = "cart")
     @OrderColumn(name = "index")
     private List<CartItem> items = new LinkedList<>();
@@ -25,4 +27,19 @@ class Cart {
     private User user;
 
     private Boolean active;
+
+    Cart(User user) {
+        this.id = UUID.randomUUID();
+        this.user = user;
+        this.active = true;
+    }
+
+    void add(Product product) {
+        var existingItem = items.stream().filter(item -> item.contains(product)).findFirst();
+        if(existingItem.isPresent()) {
+            existingItem.get().increaseCount();
+        } else {
+            items.add(new CartItem(this, product));
+        }
+    }
 }

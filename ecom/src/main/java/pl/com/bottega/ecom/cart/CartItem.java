@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
+@NoArgsConstructor
 class CartItem {
     @EmbeddedId
     private CartItemId id;
@@ -26,6 +27,22 @@ class CartItem {
     @ManyToOne
     @MapsId("cartId")
     private Cart cart;
+
+    private Long itemsCount;
+
+    CartItem(Cart cart, Product product) {
+        this.cart = cart;
+        this.product = product;
+        this.itemsCount = 1L;
+    }
+
+    boolean contains(Product product) {
+        return product.getId().equals(this.product.getId());
+    }
+
+    void increaseCount() {
+        itemsCount++;
+    }
 }
 
 @Embeddable
