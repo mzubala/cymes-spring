@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    ResponseEntity<CreateCategoryResponse> createCategory(@RequestBody CreateCategoryRequest request) {
+    ResponseEntity<CreateCategoryResponse> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
         var id = categoryService.create(new CategoryService.CreateCategoryCommand(request.name));
         return new ResponseEntity<>(new CreateCategoryResponse(id), HttpStatus.CREATED);
     }
@@ -43,6 +45,7 @@ class CategoryController {
 
 @Data
 class CreateCategoryRequest {
+    @NotBlank
     String name;
 }
 
