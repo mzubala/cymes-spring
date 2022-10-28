@@ -2,6 +2,7 @@ package pl.com.bottega.ecom.catalog;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.ecom.UserCommand;
@@ -25,6 +26,8 @@ class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    private final ApplicationEventPublisher publisher;
+
     @Timed
     public UUID create(CreateProductCommand createProductCommand) {
         var category = categoryRepository.getById(createProductCommand.getCategoryId());
@@ -43,6 +46,13 @@ class ProductService {
         var product = productRepository.getById(updateProductCommand.getProductId());
         product.setName(updateProductCommand.getName());
         product.setCategory(category);
+        if(!product.getPrice().equals(updateProductCommand.price)) {
+            publisher.publishEvent(new ProductPriceChangedEvent(
+                product.getId(),
+                product.getPrice(),
+                updateProductCommand.price
+            ));
+        }
         product.setPrice(updateProductCommand.getPrice());
         productRepository.save(product);
     }

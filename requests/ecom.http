@@ -44,12 +44,12 @@ GET http://localhost:9090/products
 
 ###
 
-PUT http://localhost:9090/products/bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81
+PUT http://localhost:9090/products/6ba02c4e-04ae-4321-bda5-6bb4def03086
 Content-type: application/json
 
 {
   "name": "Samochody",
-  "categoryId": "bbd8953b-7e3b-4f82-a0d0-0d02e69a2f81",
+  "categoryId": "b44f88bf-5d4c-4000-9cec-f2d4adecb184",
   "price": 5.60
 }
 
