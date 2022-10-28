@@ -6,3 +6,4 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
+tax-policy: pl

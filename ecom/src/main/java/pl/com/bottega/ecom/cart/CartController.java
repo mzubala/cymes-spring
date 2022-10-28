@@ -2,6 +2,7 @@ package pl.com.bottega.ecom.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/carts")
 @AllArgsConstructor
+@Scope("request")
 class CartController {
 
     private static final UUID TMP_USER_ID = UUID.fromString("386e8098-5605-11ed-bdc3-0242ac120002");
@@ -26,7 +28,7 @@ class CartController {
 
     @GetMapping
     CartDto getCart() {
-        return null;
+        return cartService.getCart(TMP_USER_ID);
     }
 
     @PostMapping
