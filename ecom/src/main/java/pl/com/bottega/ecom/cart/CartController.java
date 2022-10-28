@@ -3,6 +3,8 @@ package pl.com.bottega.ecom.cart;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.com.bottega.ecom.user.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -22,30 +25,32 @@ import java.util.UUID;
 @Scope("request")
 class CartController {
 
-    private static final UUID TMP_USER_ID = UUID.fromString("386e8098-5605-11ed-bdc3-0242ac120002");
-
     private final CartService cartService;
 
     @GetMapping
-    CartDto getCart() {
-        return cartService.getCart(TMP_USER_ID);
+    CartDto getCart(Authentication authentication) {
+        return cartService.getCart(getUserId(authentication));
     }
 
     @PostMapping
-    void addToCart(@Valid @RequestBody AddToCartRequest request) {
-        cartService.addToCart(request.productId, TMP_USER_ID);
+    void addToCart(@Valid @RequestBody AddToCartRequest request, Authentication authentication) {
+        cartService.addToCart(request.productId, getUserId(authentication));
     }
 
     @DeleteMapping
-    void removeFromCart(@Valid @RequestBody RemoveFromCartRequest request) {
-        cartService.removeFromCart(request.productId, TMP_USER_ID);
+    void removeFromCart(@Valid @RequestBody RemoveFromCartRequest request, Authentication authentication) {
+        cartService.removeFromCart(request.productId, getUserId(authentication));
     }
 
     @PutMapping
-    void changeQuantity(@Valid @RequestBody ChangeQuantityInCartRequest request) {
-        cartService.changeQuantity(request.productId, TMP_USER_ID, request.newQuantity);
+    void changeQuantity(@Valid @RequestBody ChangeQuantityInCartRequest request, Authentication authentication) {
+        cartService.changeQuantity(request.productId, getUserId(authentication), request.newQuantity);
     }
 
+    private UUID getUserId(Authentication authentication) {
+        return ((User) authentication.getPrincipal()).getId();
+    }
+    
     @Data
     static class AddToCartRequest {
         @NotNull

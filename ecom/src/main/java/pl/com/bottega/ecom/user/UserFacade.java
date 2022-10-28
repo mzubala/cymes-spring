@@ -14,4 +14,8 @@ public class UserFacade {
     public User getById(UUID userId) {
         return userRepository.getById(userId);
     }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }
