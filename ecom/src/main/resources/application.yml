@@ -7,3 +7,7 @@ spring:
     hibernate:
       ddl-auto: update
 tax-policy: pl
+
+pl-tax-policy:
+  budowa: 0.08
+  jedzenie: 0.23
