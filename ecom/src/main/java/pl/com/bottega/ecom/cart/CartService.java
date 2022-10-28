@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.ecom.catalog.CatalogFacade;
 import pl.com.bottega.ecom.user.UserFacade;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.UUID;
 
 @Component
@@ -24,15 +25,19 @@ class CartService {
     }
 
     public void removeFromCart(UUID productId, UUID userId) {
-        var cart = cartRepository.getByActiveAndUserId(true, userId);
+        var cart = getCartOrThrow(userId);
         cart.remove(productId);
         cartRepository.save(cart);
     }
 
     public void changeQuantity(UUID productId, UUID userId, Long newQuantity) {
-        var cart = cartRepository.getByActiveAndUserId(true, userId);
+        var cart = getCartOrThrow(userId);
         cart.changeQuantity(productId, newQuantity);
         cartRepository.save(cart);
+    }
+
+    private Cart getCartOrThrow(UUID userId) {
+        return cartRepository.findByActiveAndUserId(true, userId).orElseThrow(() -> new EntityNotFoundException(String.format("Active cart for user %s not found", userId)));
     }
 
     private Cart findOrCreateCart(UUID userId) {
