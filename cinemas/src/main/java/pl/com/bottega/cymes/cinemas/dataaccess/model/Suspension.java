@@ -2,16 +2,16 @@ package pl.com.bottega.cymes.cinemas.dataaccess.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import java.time.Instant;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
 @Data
