@@ -1,7 +1,7 @@
 package pl.com.bottega.cymes.cinemas.dataaccess.dao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.Optional;
 import java.util.stream.Stream;
