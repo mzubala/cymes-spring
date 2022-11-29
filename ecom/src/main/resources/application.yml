@@ -6,6 +6,9 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
 tax-policy: pl
 
 pl-tax-policy:
