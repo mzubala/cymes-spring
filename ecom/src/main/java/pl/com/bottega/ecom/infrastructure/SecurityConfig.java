@@ -5,30 +5,31 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import pl.com.bottega.ecom.user.UserFacade;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-class SecurityConfig extends WebSecurityConfigurerAdapter {
+class SecurityConfig {
 
     private final UserFacade userFacade;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.cors().disable();
         http.csrf().disable();
         http.formLogin();
-        http.authorizeRequests()
-            .mvcMatchers(HttpMethod.GET, "/categories", "/products")
+        http.authorizeHttpRequests()
+            .requestMatchers(HttpMethod.GET, "/categories", "/products")
             .anonymous()
             .and()
-            .authorizeRequests()
-            .mvcMatchers(HttpMethod.POST, "/users")
+            .authorizeHttpRequests()
+            .requestMatchers(HttpMethod.POST, "/users")
             .anonymous();
-        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeHttpRequests().anyRequest().authenticated();
         http.userDetailsService((login) -> userFacade.findByEmail(login));
+        return http.build();
     }
 
     @Bean
