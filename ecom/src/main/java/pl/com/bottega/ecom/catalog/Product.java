@@ -1,6 +1,6 @@
 package pl.com.bottega.ecom.catalog;
 
-import javax.persistence.ManyToOne;
+import jakarta.persistence.ManyToOne;
 
 class Product {
 
