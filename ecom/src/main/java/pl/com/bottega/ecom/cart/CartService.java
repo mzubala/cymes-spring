@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.ecom.catalog.CatalogFacade;
 import pl.com.bottega.ecom.user.UserFacade;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.UUID;
 
 @Component
