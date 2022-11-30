@@ -38,7 +38,10 @@ class MovieCatalogWebClientAdapter implements MovieCatalog {
                 if (response.statusCode().is2xxSuccessful()) {
                     return response.bodyToMono(GetMovieResponse.class);
                 } else {
-                    return Mono.error(new ServerErrorException("Failed to fetch movie"));
+                    return Mono.error(new ServerErrorException(
+                        "Failed to fetch movie",
+                        new IllegalStateException("Unexpected response status code: " + response.statusCode())
+                    ));
                 }
             }).map(GetMovieResponse::toDomain).block();
     }
