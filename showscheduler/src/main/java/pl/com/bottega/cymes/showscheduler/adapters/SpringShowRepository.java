@@ -1,20 +1,17 @@
 package pl.com.bottega.cymes.showscheduler.adapters;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ShowRepository;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Version;
-import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.UUID;
 
