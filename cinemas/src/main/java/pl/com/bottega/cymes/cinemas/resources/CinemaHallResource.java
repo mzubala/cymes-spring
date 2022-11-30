@@ -20,7 +20,7 @@ import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaHallInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionCheckDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
