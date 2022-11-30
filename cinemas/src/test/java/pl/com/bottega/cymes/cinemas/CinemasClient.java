@@ -1,7 +1,6 @@
 package pl.com.bottega.cymes.cinemas;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.reactive.server.WebTestClient;
