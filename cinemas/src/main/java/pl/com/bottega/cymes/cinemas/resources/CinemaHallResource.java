@@ -1,5 +1,6 @@
 package pl.com.bottega.cymes.cinemas.resources;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +22,7 @@ import pl.com.bottega.cymes.cinemas.services.dto.DetailedCinemaHallInfoDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionCheckDto;
 import pl.com.bottega.cymes.cinemas.services.dto.SuspensionDto;
 
-import javax.validation.Valid;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @RestController

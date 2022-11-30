@@ -4,10 +4,9 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.bottega.cymes.showscheduler.adapters.clients.MovieCatalogAdapter;
 import pl.com.bottega.cymes.showscheduler.domain.Movie;
+import pl.com.bottega.cymes.showscheduler.domain.ports.MovieCatalog;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.lessThan;
 import static com.github.tomakehurst.wiremock.client.WireMock.moreThan;
@@ -19,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class MovieCatalogAdapterTest {
 
     @Autowired
-    private MovieCatalogAdapter movieCatalogAdapter;
+    private MovieCatalog movieCatalogAdapter;
 
     @Autowired
     private CircuitBreakerRegistry circuitBreakerRegistry;
