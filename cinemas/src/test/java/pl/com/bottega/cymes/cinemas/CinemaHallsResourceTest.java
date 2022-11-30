@@ -16,7 +16,7 @@ import pl.com.bottega.cymes.cinemas.dataaccess.model.Row;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.RowElement;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.RowElementKind;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
