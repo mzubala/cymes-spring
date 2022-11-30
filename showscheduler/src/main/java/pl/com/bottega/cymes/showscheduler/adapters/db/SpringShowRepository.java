@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.showscheduler.domain.Show;
 import pl.com.bottega.cymes.showscheduler.domain.ports.ShowRepository;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.time.Instant;
 import java.util.UUID;
 
