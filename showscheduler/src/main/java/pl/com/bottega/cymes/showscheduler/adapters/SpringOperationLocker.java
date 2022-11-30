@@ -1,11 +1,11 @@
 package pl.com.bottega.cymes.showscheduler.adapters;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.cymes.showscheduler.domain.OperationLocker;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.util.function.Supplier;
 
 @Component
