@@ -1,14 +1,13 @@
 package pl.com.bottega.cymes.showscheduler.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.bottega.cymes.showscheduler.adapters.MovieCatalogAdapter;
 import pl.com.bottega.cymes.showscheduler.domain.Movie;
+import pl.com.bottega.cymes.showscheduler.domain.MovieCatalog;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -25,7 +24,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class MovieCatalogAdapterTest {
 
     @Autowired
-    private MovieCatalogAdapter movieCatalogAdapter;
+    private MovieCatalog movieCatalogAdapter;
 
     @Autowired
     private CircuitBreakerRegistry circuitBreakerRegistry;
