@@ -31,9 +31,9 @@ POST http://localhost:9090/products
 Content-type: application/json
 
 {
-  "name": "Chlebek",
+  "name": "",
   "categoryId": "5fb3096f-e89f-48f4-818e-fa561dbf70ce",
-  "price": "8.90"
+  "price": "-8.90"
 }
 ###
 

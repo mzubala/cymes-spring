@@ -2,6 +2,7 @@ package pl.com.bottega.ecom.infrastructure;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.h2.api.ErrorCode;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,10 @@ class ExceptionHandlers extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(JdbcSQLIntegrityConstraintViolationException.class)
     ResponseEntity<GlobalError> handleJdbcSQLIntegrityConstraintViolationException(JdbcSQLIntegrityConstraintViolationException ex) throws JdbcSQLIntegrityConstraintViolationException {
-        if (ex.getErrorCode() == 23505) {
-            return new ResponseEntity(new GlobalError("Uniquness constraint vioated on the db"), HttpStatus.CONFLICT);
+        if (ex.getErrorCode() == ErrorCode.DUPLICATE_KEY_1) {
+            return new ResponseEntity(new GlobalError("Uniqueness constraint violated on the db"), HttpStatus.CONFLICT);
+        } else if(ex.getErrorCode() == ErrorCode.REFERENTIAL_INTEGRITY_VIOLATED_PARENT_MISSING_1) {
+            return new ResponseEntity(new GlobalError("Object to reference not found"), HttpStatus.NOT_FOUND);
         }
         throw ex;
     }
