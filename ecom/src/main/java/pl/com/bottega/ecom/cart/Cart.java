@@ -1,14 +1,15 @@
 package pl.com.bottega.ecom.cart;
 
-import lombok.NoArgsConstructor;
-import pl.com.bottega.ecom.catalog.Product;
-import pl.com.bottega.ecom.user.User;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderColumn;
+import lombok.NoArgsConstructor;
+import pl.com.bottega.ecom.catalog.Product;
+import pl.com.bottega.ecom.user.User;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
