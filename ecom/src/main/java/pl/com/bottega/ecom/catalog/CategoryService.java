@@ -2,6 +2,7 @@ package pl.com.bottega.ecom.catalog;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 import pl.com.bottega.ecom.UserCommand;
 import pl.com.bottega.ecom.infrastructure.Audit;
@@ -17,6 +18,7 @@ class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Secured("ROLE_ADMIN")
     public UUID create(CreateCategoryCommand createCategoryCommand) {
         var category = new Category(UUID.randomUUID(), createCategoryCommand.getName());
         categoryRepository.save(category);

@@ -1,6 +1,6 @@
 POST http://localhost:9090/categories
 Content-type: application/json
-Cookie: JSESSIONID=48C0A9F013512FD79564BF09E6DFEBD1
+Cookie: JSESSIONID=50295FA7906290BFFE080169BCF89682
 
 {
   "name": "Jedzenie"
@@ -68,7 +68,7 @@ Content-type: application/json
 
 POST http://localhost:9090/carts
 Content-type: application/json
-Cookie: JSESSIONID=15C17424BF71C20737A3CABDC66323A7
+Cookie: JSESSIONID=82341CFBC4DFDF37253CB9771024ED67
 
 {
   "productId": "6ba02c4e-04ae-4321-bda5-6bb4def03086"
@@ -77,6 +77,7 @@ Cookie: JSESSIONID=15C17424BF71C20737A3CABDC66323A7
 ###
 
 GET http://localhost:9090/carts
+Cookie: JSESSIONID=82341CFBC4DFDF37253CB9771024ED67
 
 ###
 
