@@ -23,6 +23,14 @@ class CartService {
         cartRepository.save(cart);
     }
 
+    public void removeFromCart(UUID productId, UUID userId) {
+        // TODO
+    }
+
+    public void changeQuantity(UUID productId, UUID userId, Long newQuantity) {
+        // TODO
+    }
+
     private Cart findOrCreateCart(UUID userId) {
         return cartRepository.findByActiveAndUserId(true, userId).orElseGet(() ->
             new Cart(userFacade.getById(userId))

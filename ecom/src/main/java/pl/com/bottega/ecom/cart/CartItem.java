@@ -31,6 +31,7 @@ class CartItem {
     private Long itemsCount;
 
     CartItem(Cart cart, Product product) {
+        this.id = new CartItemId(cart.getId(), product.getId());
         this.cart = cart;
         this.product = product;
         this.itemsCount = 1L;

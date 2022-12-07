@@ -37,10 +37,22 @@ class Cart {
 
     void add(Product product) {
         var existingItem = items.stream().filter(item -> item.contains(product)).findFirst();
-        if(existingItem.isPresent()) {
+        if (existingItem.isPresent()) {
             existingItem.get().increaseCount();
         } else {
             items.add(new CartItem(this, product));
         }
+    }
+
+    void remove(UUID productId) {
+        // TODO
+    }
+
+    void changeQuantity(UUID productId, Long newQuantity) {
+
+    }
+
+    UUID getId() {
+        return id;
     }
 }
