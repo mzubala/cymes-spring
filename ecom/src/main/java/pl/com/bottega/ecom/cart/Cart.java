@@ -19,7 +19,7 @@ class Cart {
     @Id
     private UUID id;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "index")
     private List<CartItem> items = new LinkedList<>();
 
