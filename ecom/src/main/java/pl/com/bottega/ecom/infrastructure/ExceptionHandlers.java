@@ -1,25 +1,21 @@
 package pl.com.bottega.ecom.infrastructure;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.h2.api.ErrorCode;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-class ExceptionHandlers extends ResponseEntityExceptionHandler {
+class ExceptionHandlers {
 
     @ExceptionHandler(EntityNotFoundException.class)
     ResponseEntity<GlobalError> handleEntityNotFoundException(EntityNotFoundException ex) {
@@ -36,14 +32,13 @@ class ExceptionHandlers extends ResponseEntityExceptionHandler {
         throw ex;
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ValidationErrors> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         return new ResponseEntity<>(new ValidationErrors(
             ex.getFieldErrors().stream()
                 .map(fieldError -> new ValidationError(fieldError.getField(), fieldError.getDefaultMessage()))
                 .collect(Collectors.toList())
         ), HttpStatus.BAD_REQUEST);
-
     }
 
     @Data

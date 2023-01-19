@@ -32,7 +32,7 @@ Content-type: application/json
 
 {
   "name": "",
-  "categoryId": "5fb3096f-e89f-48f4-818e-fa561dbf70ce",
+  "categoryId": "5fb3096f-e89f-48f4-818e-fa561dbe",
   "price": "-8.90"
 }
 ###
