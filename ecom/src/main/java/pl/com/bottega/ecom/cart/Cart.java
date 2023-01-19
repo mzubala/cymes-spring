@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderColumn;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -67,5 +68,21 @@ class Cart {
 
     UUID getId() {
         return id;
+    }
+
+    BigDecimal getSubtotal() {
+        return items.stream()
+            .map(CartItem::getSubtotal)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    BigDecimal getTotal(TaxPolicy taxPolicy) {
+        return items.stream()
+            .map(item -> item.getTotal(taxPolicy))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    User getUser() {
+        return user;
     }
 }

@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -54,6 +55,17 @@ class CartItem {
             throw new IllegalArgumentException();
         }
         this.itemsCount = newQuantity;
+    }
+
+    BigDecimal getSubtotal() {
+        return product.getPrice().multiply(new BigDecimal(itemsCount));
+    }
+
+    BigDecimal getTotal(TaxPolicy taxPolicy) {
+        return getSubtotal().add(taxPolicy.calculateTax(new TaxQuery(
+            product,
+            cart.getUser()
+        )).multiply(new BigDecimal(itemsCount)));
     }
 }
 

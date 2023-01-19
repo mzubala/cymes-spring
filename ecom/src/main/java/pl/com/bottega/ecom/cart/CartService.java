@@ -1,6 +1,5 @@
 package pl.com.bottega.ecom.cart;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.ecom.catalog.CatalogFacade;
@@ -11,12 +10,20 @@ import java.util.UUID;
 
 @Component
 @Transactional
-@RequiredArgsConstructor
 class CartService {
 
     private final CartRepository cartRepository;
     private final UserFacade userFacade;
     private final CatalogFacade catalogFacade;
+
+    private final TaxPolicy taxPolicy;
+
+    CartService(CartRepository cartRepository, UserFacade userFacade, CatalogFacade catalogFacade, TaxPolicy taxPolicy) {
+        this.cartRepository = cartRepository;
+        this.userFacade = userFacade;
+        this.catalogFacade = catalogFacade;
+        this.taxPolicy = taxPolicy;
+    }
 
     public void addToCart(UUID productId, UUID userId) {
         var cart = findOrCreateCart(userId);
@@ -34,6 +41,16 @@ class CartService {
         var cart = getCartOrThrow(userId);
         cart.changeQuantity(productId, newQuantity);
         cartRepository.save(cart);
+    }
+
+    public CartDto getCart(UUID userId) {
+        var cart = findOrCreateCart(userId);
+        return new CartDto(
+            userId,
+            cart.getId(),
+            cart.getSubtotal(),
+            cart.getTotal(taxPolicy)
+        );
     }
 
     private Cart getCartOrThrow(UUID userId) {

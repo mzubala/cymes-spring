@@ -26,7 +26,7 @@ class CartController {
 
     @GetMapping
     CartDto getCart() {
-        return null;
+        return cartService.getCart(TMP_USER_ID);
     }
 
     @PostMapping
