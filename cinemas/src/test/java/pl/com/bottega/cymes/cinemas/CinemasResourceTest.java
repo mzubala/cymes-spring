@@ -35,14 +35,9 @@ public class CinemasResourceTest {
 
         // then
         createCinemaResponse.expectStatus().isOk();
-        getCinemasResponse
-                .expectStatus().isOk()
-                .expectBodyList(BasicCinemaInfoDto.class)
-                .consumeWith(results ->
-                        assertThat(results.getResponseBody())
-                                .hasSize(1)
-                                .anyMatch(cinema -> cinema.getCity().equals("Warszawa") && cinema.getName().equals("Arkadia"))
-                );
+        getCinemasResponse.expectStatus().isOk().expectBodyList(BasicCinemaInfoDto.class).consumeWith(
+            results -> assertThat(results.getResponseBody()).hasSize(1)
+                .anyMatch(cinema -> cinema.getCity().equals("Warszawa") && cinema.getName().equals("Arkadia")));
     }
 
     @Test
@@ -66,14 +61,11 @@ public class CinemasResourceTest {
         cinemasClient.createCinema(request);
 
         // then
-        transactionTemplate.execute((callback) -> {
+        transactionTemplate.executeWithoutResult((callback) -> {
             var persistentCommands = persistentCommandDao.findAll();
-            assertThat(persistentCommands).anyMatch(cmd ->
-                    cmd.getType().equals("CreateCinemaCommand") &&
-                            cmd.getContent().contains("Warszawa") &&
-                            cmd.getContent().contains(request.getName())
-            );
-            return null;
+            assertThat(persistentCommands).anyMatch(
+                cmd -> cmd.getType().equals("CreateCinemaCommand") && cmd.getContent().contains("Warszawa") && cmd
+                    .getContent().contains(request.getName())).hasSize(1);
         });
     }
 
