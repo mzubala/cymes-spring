@@ -1,12 +1,12 @@
 package pl.com.bottega.cymes.cinemas;
 
 
+import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaDao;
 import pl.com.bottega.cymes.cinemas.dataaccess.dao.CinemaHallDao;
@@ -16,7 +16,6 @@ import pl.com.bottega.cymes.cinemas.dataaccess.model.Row;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.RowElement;
 import pl.com.bottega.cymes.cinemas.dataaccess.model.RowElementKind;
 
-import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

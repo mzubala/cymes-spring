@@ -63,7 +63,7 @@ public class CinemaHallService {
 
     @Transactional(readOnly = true)
     public DetailedCinemaHallInfoDto getCinemaHall(Long id) {
-        var cinemaHall = cinemaHallDao.findWithLayout(id);
+        var cinemaHall = cinemaHallDao.find(id);
         var result = new DetailedCinemaHallInfoDto();
         result.setCapacity(cinemaHall.getCapacity());
         result.setId(cinemaHall.getId());
