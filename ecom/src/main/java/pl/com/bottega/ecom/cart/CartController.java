@@ -19,6 +19,8 @@ class CartController {
 
     private final CartService cartService;
 
+    private static final UUID USER_ID = UUID.fromString("6ba02c4e-04ae-4321-bda5-6bb4def03086");
+
     @GetMapping
     CartDto getCart() {
         return null;
